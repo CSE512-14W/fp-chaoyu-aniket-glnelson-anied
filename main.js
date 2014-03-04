@@ -13,7 +13,7 @@
     var links=[];
 		
 	d3.csv("Datasets/Coactivation_E.csv")
-    .row(function(d) { return {source: +d.src - 1, target: +d.snk - 1, strength: +d.value * 100}; })
+    .row(function(d) { return {source: +d.src - 1, target: +d[" snk"] - 1, strength: +d[" value"] * 100}; })
     .get(function(error, rows) { 
     	console.log(links);
     	links = rows;
