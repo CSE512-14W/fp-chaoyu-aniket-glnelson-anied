@@ -11,28 +11,34 @@
 
     //A LIST OF LINKS BETWEEN CIRCLES
     var links=[];
-		
-	d3.csv("Datasets/PTC3_words_HD_E.csv")
+
+    // Holds id of node, id of node, time value, packet
+    var node_node_time_packet = [ ] 
+    
+    d3.csv("Datasets/PTC3_words_HD_E.csv")
     .row(function(d) { return {source: +d.src - 1, target: +d[" snk"] - 1, strength: +d[" value"] * 100}; })
     .get(function(error, rows) { 
     	console.log(links);
     	links = rows;
     	console.log(links);
+
     	//SHADOW DEFINITION
-    createDefs(svg.append('svg:defs'));
-
-    $.each(circles, function(i, d) {
-        g_circles.append("circle").attr('filter', 'url(#dropShadow)').attr("class", "circle").attr("id", "circle" + i).attr("r", radius).attr("cx", d[0]).attr("cy", d[1]).call(drag);
+        createDefs(svg.append('svg:defs'));
+    
+        $.each(circles, function(i, d) {
+            g_circles.append("circle").attr('filter', 'url(#dropShadow)').attr("class", "circle").attr("id", "circle" + i).attr("r", radius).attr("cx", d[0]).attr("cy", d[1]).call(drag);
+        });
+    
+        g_lines.selectAll(".link_line").data(links).enter().append("path").attr("class", "link_line").attr("fill", function(d) {
+            return d3color(color_scale(d.strength));
+        }).attr("id", function(i, d) {
+            return "link_line" + d;
+        }).attr("d", function(d) {
+            return drawCurve(d);
+        }).attr("data", function(i, d) {
+            return d;
+        });
     });
-
-    g_lines.selectAll(".link_line").data(links).enter().append("path").attr("class", "link_line").attr("fill", function(d) {
-        return d3color(color_scale(d.strength));
-    }).attr("id", function(i, d) {
-        return "link_line" + d;
-    }).attr("d", function(d) {
-        return drawCurve(d);
-    });
-    	});
     
     function createDefs(defs) {
         var dropShadowFilter = defs.append('svg:filter').attr('id', 'dropShadow');
@@ -41,7 +47,7 @@
         var feMerge = dropShadowFilter.append('svg:feMerge');
         feMerge.append('svg:feMergeNode');
         feMerge.append('svg:feMergeNode').attr('in', "SourceGraphic");
-    }
+    };
 
     var drag = d3.behavior.drag().origin(Object).on("drag", function() {
         dragmove(this);
@@ -80,35 +86,35 @@
                 });
             }
         });
-    }
-
-	function drawCurve(d) {
-		var slope = Math.atan2((+d3.select('#circle' + d.target).attr("cy") - d3.select('#circle' + d.source).attr("cy")), (+d3.select('#circle' + d.target).attr("cx") - d3.select('#circle' + d.source).attr("cx")));
-		var slopePlus90 = Math.atan2((+d3.select('#circle' + d.target).attr("cy") - d3.select('#circle' + d.source).attr("cy")), (+d3.select('#circle' + d.target).attr("cx") - d3.select('#circle' + d.source).attr("cx"))) + (Math.PI/2);
-		
-		var sourceX = +d3.select('#circle' + d.source).attr("cx");
-		var sourceY = +d3.select('#circle' + d.source).attr("cy");
-		var targetX = +d3.select('#circle' + d.target).attr("cx");
-		var targetY = +d3.select('#circle' + d.target).attr("cy");
-		
-		var halfX = (sourceX + targetX)/2;
-		var halfY = (sourceY + targetY)/2;
-		
-		var lineLength = Math.sqrt(Math.pow(targetX - sourceX, 2) + Math.pow(targetY - sourceY, 2));
-		
-		var MP1X = halfX + (offsetScale * lineLength + strength_scale(d.strength)/2) * Math.cos(slopePlus90);
-		var MP1Y = halfY + (offsetScale * lineLength + strength_scale(d.strength)/2) * Math.sin(slopePlus90);
-		var MP2X = halfX + (offsetScale * lineLength - strength_scale(d.strength)/2) * Math.cos(slopePlus90);
-		var MP2Y = halfY + (offsetScale * lineLength - strength_scale(d.strength)/2) * Math.sin(slopePlus90);
-		
-		var points = [];
-		points.push([(sourceX - strength_scale(d.strength) * Math.cos(slopePlus90)),(sourceY - strength_scale(d.strength) * Math.sin(slopePlus90))]);
-		points.push([MP2X,MP2Y]);
-		points.push(([(targetX  + radius * Math.cos(slope)), (targetY + radius * Math.sin(slope))]));
-		points.push(([(targetX  + radius * Math.cos(slope)), (targetY + radius * Math.sin(slope))]));
-		points.push([MP1X, MP1Y]);
-		points.push([(sourceX + strength_scale(d.strength) * Math.cos(slopePlus90)),(sourceY + strength_scale(d.strength) * Math.sin(slopePlus90))]);
-		
-		return d3LineBasis(points) + "Z";
-	}
+    };
+    
+    function drawCurve(d) {
+        var slope = Math.atan2((+d3.select('#circle' + d.target).attr("cy") - d3.select('#circle' + d.source).attr("cy")), (+d3.select('#circle' + d.target).attr("cx") - d3.select('#circle' + d.source).attr("cx")));
+        var slopePlus90 = Math.atan2((+d3.select('#circle' + d.target).attr("cy") - d3.select('#circle' + d.source).attr("cy")), (+d3.select('#circle' + d.target).attr("cx") - d3.select('#circle' + d.source).attr("cx"))) + (Math.PI/2);
+        
+        var sourceX = +d3.select('#circle' + d.source).attr("cx");
+        var sourceY = +d3.select('#circle' + d.source).attr("cy");
+        var targetX = +d3.select('#circle' + d.target).attr("cx");
+        var targetY = +d3.select('#circle' + d.target).attr("cy");
+        
+        var halfX = (sourceX + targetX)/2;
+        var halfY = (sourceY + targetY)/2;
+        
+        var lineLength = Math.sqrt(Math.pow(targetX - sourceX, 2) + Math.pow(targetY - sourceY, 2));
+        
+        var MP1X = halfX + (offsetScale * lineLength + strength_scale(d.strength)/2) * Math.cos(slopePlus90);
+        var MP1Y = halfY + (offsetScale * lineLength + strength_scale(d.strength)/2) * Math.sin(slopePlus90);
+        var MP2X = halfX + (offsetScale * lineLength - strength_scale(d.strength)/2) * Math.cos(slopePlus90);
+        var MP2Y = halfY + (offsetScale * lineLength - strength_scale(d.strength)/2) * Math.sin(slopePlus90);
+        
+        var points = [];
+        points.push([(sourceX - strength_scale(d.strength) * Math.cos(slopePlus90)),(sourceY - strength_scale(d.strength) * Math.sin(slopePlus90))]);
+        points.push([MP2X,MP2Y]);
+        points.push(([(targetX  + radius * Math.cos(slope)), (targetY + radius * Math.sin(slope))]));
+        points.push(([(targetX  + radius * Math.cos(slope)), (targetY + radius * Math.sin(slope))]));
+        points.push([MP1X, MP1Y]);
+        points.push([(sourceX + strength_scale(d.strength) * Math.cos(slopePlus90)),(sourceY + strength_scale(d.strength) * Math.sin(slopePlus90))]);
+        
+	return d3LineBasis(points) + "Z";
+    };
 })();
