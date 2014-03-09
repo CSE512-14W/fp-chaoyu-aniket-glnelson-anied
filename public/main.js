@@ -36,7 +36,8 @@ var graph = {
   ]
 };
 
-var dots =[
+// time varying data
+var dots = {'t1':[
     {"source":  0, "target":  1},
     {"source":  1, "target":  2},
     {"source":  2, "target":  0},
@@ -56,7 +57,27 @@ var dots =[
     {"source": 10, "target": 11},
     {"source": 11, "target": 12},
     {"source": 12, "target": 10}
-  ];
+  ],'t2':[
+    {"source":  1, "target":  3},
+    {"source":  1, "target":  2},
+    {"source":  1, "target":  0},
+    {"source":  1, "target":  3},
+    {"source":  1, "target":  2},
+    {"source":  5, "target":  4},
+    {"source":  4, "target":  5},
+    {"source":  5, "target":  6},
+    {"source":  5, "target":  7},
+    {"source":  5, "target":  7},
+    {"source":  5, "target":  8},
+    {"source":  6, "target":  8},
+    {"source":  6, "target":  7},
+    {"source":  6, "target":  4},
+    {"source":  6, "target": 11},
+    {"source":  6, "target": 10},
+    {"source": 10, "target": 11},
+    {"source": 11, "target": 12},
+    {"source": 12, "target": 10}
+  ]};
 
 var width = 960,
     height = 800;
@@ -105,8 +126,19 @@ function tick() {
 }
 
 packet = svg.selectAll('.packet');
+
+function endall(transition, callback) { 
+  var n = 0; 
+  transition 
+  .each(function() { ++n; }) 
+  .each("end", function() { if (!--n) callback.apply(this, arguments); }); 
+} 
+
+list = ['t1', 't2'];
+cur  = 0;
+
 function flow(){
-  packet.data(dots)
+  packet.data(dots[list[cur % list.length]])
     .enter()
     .append("circle")
     .attr("class", '.packet')
@@ -116,7 +148,12 @@ function flow(){
   .transition()
     .duration(750)
     .attr("cx", function(d){ return node.data()[d.target].x; })
-    .attr("cy", function(d){ return node.data()[d.target].y; });
+    .attr("cy", function(d){ return node.data()[d.target].y; })
+  .call(endall, function(){  
+    console.log("endall");
+    cur++;
+    flow();
+  });
 
   //svg.selectAll('.packet')
   //  .data(dots).append("image")
@@ -125,8 +162,10 @@ function flow(){
   //  .attr("height", 16)
 }
 
+
 function dblclick(d) {
   d3.select(this).classed("fixed", d.fixed = false);
+  //setInterval(flow,1000);
   flow();
 }
 
