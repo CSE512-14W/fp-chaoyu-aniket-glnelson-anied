@@ -87,68 +87,78 @@ var force = d3.layout.force()
     .charge(-1000)
     .gravity(.05)
     .linkDistance(30)
-    .on("tick", tick);
+    .on("tick", tick); // tick event 
 
+// allows node dragging, fixed thereafter
 var drag = force.drag()
     .on("dragstart", dragstart);
+
+function dragstart(d) {
+  d3.select(this).classed("fixed", d.fixed = true);
+}
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-var link = svg.selectAll(".link"),
-    node = svg.selectAll(".node");
+var links = svg.selectAll(".link"),
+    nodes = svg.selectAll(".node");
 
 force
   .nodes(graph.nodes)
   .links(graph.links)
-  .start();
+  .start(); // starts the simulation determining layout
+  // since we don't stop it anywhere
+  // we get the dynamic / constant recomputation of layout
 
-link = link.data(graph.links)
+// draw the base graph
+links = links.data(graph.links)
 .enter().append("line")
   .attr("class", "link");
 
-node = node.data(graph.nodes)
+nodes = nodes.data(graph.nodes)
 .enter().append("circle")
   .attr("class", "node")
   .attr("r", 10)
   .on("dblclick", dblclick)
   .call(drag);
 
+
+packet = svg.selectAll('.packet');
+
 function tick() {
-  link.attr("x1", function(d) { return d.source.x; })
+  links.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return d.source.y; })
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; });
 
-  node.attr("cx", function(d) { return d.x; })
+  // d.x and d.y are getting set by force layout algo
+  nodes.attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
-}
-
-packet = svg.selectAll('.packet');
+};
 
 function endall(transition, callback) { 
   var n = 0; 
   transition 
   .each(function() { ++n; }) 
   .each("end", function() { if (!--n) callback.apply(this, arguments); }); 
-} 
+};
 
 list = ['t1', 't2'];
 cur  = 0;
 
 function flow(){
-  packet.data(dots[list[cur % list.length]])
+  packet.data(dots[list[cur % list.length]]) // trick to loop
     .enter()
     .append("circle")
     .attr("class", '.packet')
-    .attr("r", function(){ return Math.random()*10 })
-    .attr("cx", function(d){ return node.data()[d.source].x; })
-    .attr("cy", function(d){ return node.data()[d.source].y; })
+    .attr("r", function(){ return 5 }) // could bind to data
+    .attr("cx", function(d){ return nodes.data()[d.source].x; })
+    .attr("cy", function(d){ return nodes.data()[d.source].y; })
   .transition()
     .duration(750)
-    .attr("cx", function(d){ return node.data()[d.target].x; })
-    .attr("cy", function(d){ return node.data()[d.target].y; })
+    .attr("cx", function(d){ return nodes.data()[d.target].x; })
+    .attr("cy", function(d){ return nodes.data()[d.target].y; })
     .remove()
   .call(endall, function(){  
     console.log("endall");
@@ -165,11 +175,9 @@ function flow(){
 
 
 function dblclick(d) {
+  // note: js returns false for x = false
   d3.select(this).classed("fixed", d.fixed = false);
   //setInterval(flow,1000);
   flow();
 }
 
-function dragstart(d) {
-  d3.select(this).classed("fixed", d.fixed = true);
-}
