@@ -7,6 +7,9 @@ HF_data = "PTC3_words_HF_E"
 LD_data = "PTC3_words_LD_E"
 LF_data = "PTC3_words_LF_E"
 
+#FILE_NAME = HD_data
+#FILE_NAME = HF_data
+#FILE_NAME = LD_data
 FILE_NAME = LF_data
 
 def formatting_data
@@ -17,10 +20,10 @@ def formatting_data
     next if index == 0
 
     arr = line.split(',')
-    source = arr[0]
-    target = arr[1]  
+    source = arr[0].to_i
+    target = arr[1].to_i 
     arr[5..-1].each_with_index do |v, i| 
-      next if v == 0
+      next if v.to_i == 0
 
       timetable[i] << [source, target]
       #puts "#{i}: #{source}, #{target}"
