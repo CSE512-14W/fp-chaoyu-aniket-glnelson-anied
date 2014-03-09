@@ -152,7 +152,7 @@ function flow(){
   .call(endall, function(){  
     console.log("endall");
     cur++;
-    flow();
+    //flow();
   });
 
   //svg.selectAll('.packet')
