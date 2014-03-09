@@ -149,10 +149,11 @@ function flow(){
     .duration(750)
     .attr("cx", function(d){ return node.data()[d.target].x; })
     .attr("cy", function(d){ return node.data()[d.target].y; })
+    .remove()
   .call(endall, function(){  
     console.log("endall");
     cur++;
-    //flow();
+    flow();
   });
 
   //svg.selectAll('.packet')
