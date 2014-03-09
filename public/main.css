@@ -21,8 +21,7 @@ body {
 }
 
 .packet {
-  fill: #121;
-  stroke: #fff;
-  stroke-width: 1px;
+  fill: #ff0000;
+  stroke: none;
 }
 
