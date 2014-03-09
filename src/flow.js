@@ -19,8 +19,6 @@
  * DRAW:
  * object(d)
  */
-
-
 (function(_){
   var flow = function() {
     var flow = {};
@@ -48,7 +46,7 @@
      *   animations in one time unit
      */
     flow.tick = function() {
-      flow.packet.data(flow.data[timeline[cur%flow.period]])
+      //flow.packet.data(flow.data[timeline[cur%flow.period]])
       
 
     };
