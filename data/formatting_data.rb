@@ -41,8 +41,6 @@ def formatting_data
   output.close
 end
 
-
-
 if $0 == __FILE__
   formatting_data
 end
