@@ -38,7 +38,7 @@
           "cy": function(d){ return y_scale(d.y)}
         });
 
-    d3.csv("../data/F_PTC3_words_HD_E.csv", function(data) {
+    d3.csv("../data/F_PTC3_words_LD_E.csv", function(data) {
       var flowdata = [];
       var previous_timeslot;
 
@@ -74,17 +74,14 @@
           .attr("cx", function(d){ return x_scale(node.data()[d.source - 1].x); })
           .attr("cy", function(d){ return y_scale(node.data()[d.source - 1].y); })
         .transition()
-          .duration(750)
+          .duration(6000)
           .attr("cx", function(d){ return x_scale(node.data()[d.target - 1].x); })
           .attr("cy", function(d){ return y_scale(node.data()[d.target - 1].y); })
-          .remove()
-          .call(endall, function(){  
-            console.log("endall");
-            cur++;
-            flow();
-          });
+          .remove();
+        
+        cur++;
       }
-      flow();
+      setInterval(flow, 1000);
     });
   }
 
