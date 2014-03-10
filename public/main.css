@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #f1f1f1;
+}
+
+.link {
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.node {
+  cursor: move;
+  fill: #ccc;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.node.fixed {
+  fill: #f00;
+}
+
+.packet {
+  fill: #ff0000;
+  stroke: none;
+}
+
