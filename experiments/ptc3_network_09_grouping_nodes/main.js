@@ -15,9 +15,15 @@
   var x_range, y_range, x_scale, y_scale, c_scale;
 
   var init_scales = function() {
+
     _.each(nodedata, function(d){ 
       d.category = d.label.slice(0, d.label.indexOf("_"));
     });
+
+    categories = _.uniq(_.map(nodedata, function(x){ return x.category; }));
+    c_scale = d3.scale.category20().domain(categories);
+
+    circle_layout();
 
     x_range = [d3.min(nodedata, function(d){ return d.x; }),
                    d3.max(nodedata, function(d){ return d.x; })];
@@ -40,13 +46,29 @@
       d.cy = y_scale(d.y);
     });
 
-    categories = _.uniq(_.map(nodedata, function(x){ return x.category; }));
-    c_scale = d3.scale.category20().domain(categories);
+  };
+
+  var circle_layout = function() {
+    //nodedata = _.sortBy(nodedata, function(node){ return node.category });
+    var index = 0,
+        interval = Math.PI * 2 / categories.length;
+
+    var coords = {};
+    _.each(categories, function(c) {
+      var x = Math.sin(interval * index);
+      var y = Math.cos(interval * index++);
+      coords[c] = [x, y];
+    })
+    
+    nodedata =_.map(nodedata, function(node){
+      node.x = coords[node.category][0];
+      node.y = coords[node.category][1];
+      return node;
+    });
   };
 
   // draw the initial nodes
   var ptc3_network = function() {
-    circle_layout();
     init_scales();
     node = node.data(nodedata)
         .enter()
@@ -175,8 +197,6 @@
       node.classed("selected", function(d){ return d.selected;})
     };
 
-
-
     var flow_id;
     var brushended = function() {
       console.log("brushended");
@@ -199,18 +219,7 @@
     brushended();
   };
 
-  var circle_layout = function() {
-    //nodedata = _.sortBy(nodedata, function(node){ return node.category });
-    var index = 0,
-        interval = Math.PI * 2 / 40;
-    
-    nodedata =_.map(nodedata, function(node){
-      node.x = Math.sin(interval * index);
-      node.y = Math.cos(interval * index++);
-      return node;
-    });
-  };
-
+  
   d3.csv("../../data/PTC3_V.csv", function(data) {
     nodedata = data.map(function(d) {
       return {
