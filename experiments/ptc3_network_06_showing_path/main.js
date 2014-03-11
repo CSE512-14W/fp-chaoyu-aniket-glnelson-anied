@@ -65,8 +65,35 @@
     var ll  = flowdata.length
     function flow(){
       console.log("cur: " + cur);
+      selected = _.filter(flowdata[cur % ll], function(d){ return node.data()[d.source - 1].selected == true });
       
-      packet.data(_.filter(flowdata[cur % ll], function(d){ return node.data()[d.source - 1].selected == true }))
+      packet.data(selected)
+            .enter()
+            .append("line")
+            .style("stroke", function(d){ return c_scale(node.data()[d.source -1].category); })
+            .attr({
+              x1: function(d){ return node.data()[d.source - 1].cx; },
+              y1: function(d){ return node.data()[d.source - 1].cy; }
+            })
+            .attr({
+              x2: function(d){ return node.data()[d.source - 1].cx; },
+              y2: function(d){ return node.data()[d.source - 1].cy; }
+            })
+            .style("opacity", 0)
+          .transition()
+            .ease('linear')
+            .duration(2000)
+            .attr({
+              x2: function(d){ return node.data()[d.target - 1].cx; },
+              y2: function(d){ return node.data()[d.target - 1].cy; }
+            })
+            .style("opacity", 0.3)
+          .transition()
+            .duration(300)
+            .style('opacity', 0.1)
+            .remove();
+
+      packet.data(selected)
             .enter()
             .append("circle")
             .attr("class", '.packet')
@@ -79,13 +106,16 @@
             .ease('linear')
             .duration(2000)
             .style("opacity", 0.9)
-            .attr("r", 2)
+            .attr("r", 4)
             .attr("cx", function(d){ return node.data()[d.target - 1].cx; })
             .attr("cy", function(d){ return node.data()[d.target - 1].cy; })
           .transition()
             .duration(300)
+            .attr("r", 0)
             .style('opacity', 0.1)
             .remove();
+
+
 
       cur++;
     }
@@ -97,24 +127,6 @@
         x = d3.scale.identity().domain([0, width]),
         y = d3.scale.identity().domain([0, height]);
 
-        //x = d3.scale.identity().domain([margin.left, width - margin.right]),
-        //y = d3.scale.identity().domain([margin.top, height - margin.bottom]);
-    
-    //var quadtree = d3.geom.quadtree()
-    //                      .extent([[margin.left, margin.top],
-    //                              [width - margin.right, height - margin.bottom]])
-    //                      (_.map(nodedata, function(d){ return [d.cx, d.cy] }));
-
-    //var search = function(quadtree, x0, y0, x3, y3) {
-    //  //console.log(quadtree);
-    //  quadtree.visit(function(node, x1, y1, x2, y2) {
-    //    console.log(node);
-    //    var p = node.point;
-    //    if(p) p.selected = (p.cx >= x0) && (p.cx <x3) && (p.cy >= y0) && (p.cy < y3);
-    //    return x1 >= x3 || y1 >= y3 || x2 < x0 || y2 < y0;
-    //  });
-    //};
-
     var brushed = function() {
       var extent = brush.extent();
       console.log(extent);
@@ -122,15 +134,12 @@
         d.selected = (extent[0][0] <= d.cx) && (d.cx < extent[1][0])
                     && (extent[0][1] <= d.cy) && (d.cy < extent[1][1]);
       });
-      //node.each(function(d) { d.selected = false; });
-      //search(quadtree, extent[0][0], extent[0][1], extent[1][0], extent[1][1]);
       node.classed("selected", function(d){ return d.selected;})
     };
 
     var flow_id;
     var brushended = function() {
       console.log("brushended");
-      //if (!d3.event.sourceEvent) return;
       if (flow_id !== undefined) clearInterval(flow_id);
       flow_id = ptc3_flow();
     };
@@ -149,8 +158,6 @@
     
     brushended();
   };
-
-  
 
   d3.csv("../../data/PTC3_V.csv", function(data) {
     nodedata = data.map(function(d) {
