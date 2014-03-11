@@ -156,8 +156,17 @@
             })
             .style("opacity", 0.5)
           .transition()
-            .duration(300)
-            .style('opacity', 0.1)
+            .ease('linear')
+            .duration(500)
+            .attr({
+              x1: function(d){ return nodedata[d.target - 1].cx; },
+              y1: function(d){ return nodedata[d.target - 1].cy; }
+            })
+            .attr({
+              x2: function(d){ return nodedata[d.target - 1].cx; },
+              y2: function(d){ return nodedata[d.target - 1].cy; }
+            })
+            .style("opacity", 0.1)
             .remove();
 
       packet.data(selected)

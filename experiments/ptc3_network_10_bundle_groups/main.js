@@ -1,7 +1,7 @@
 (function(){
-  var margin = {top: 20, right: 20, bottom: 20, left: 20},
-      width = 1280,
-      height = 700;
+  var margin = {top: 40, right: 40, bottom: 40, left: 40},
+      width = 900,
+      height = 900;
 
   var svg = d3.select("body")
                 .append("svg")
@@ -11,13 +11,24 @@
   var node = svg.selectAll(".node");
   var packet = svg.selectAll(".packet");
 
-  var nodedata, flowdata = [];
+  var nodedata, groupnode, flowdata = [];
   var x_range, y_range, x_scale, y_scale, c_scale;
 
-  var init_scales = function(nodedata) {
+  var init_scales = function() {
+
     _.each(nodedata, function(d){ 
       d.category = d.label.slice(0, d.label.indexOf("_"));
     });
+
+    categories = _.uniq(_.map(nodedata, function(x){ return x.category; }));
+
+    _.each(nodedata, function(d){
+      d.r = _.filter(nodedata, function(x){ return x.category == d.category;}).length;
+    });
+
+    c_scale = d3.scale.category20().domain(categories);
+
+    circle_layout();
 
     x_range = [d3.min(nodedata, function(d){ return d.x; }),
                    d3.max(nodedata, function(d){ return d.x; })];
@@ -40,23 +51,40 @@
       d.cy = y_scale(d.y);
     });
 
-    categories = _.uniq(_.map(nodedata, function(x){ return x.category; }));
-    c_scale = d3.scale.category20().domain(categories);
   };
 
+  var circle_layout = function() {
+    //nodedata = _.sortBy(nodedata, function(node){ return node.category });
+    var index = 0,
+        interval = Math.PI * 2 / categories.length;
+
+    var coords = {};
+    _.each(categories, function(c) {
+      var x = Math.sin(interval * index);
+      var y = Math.cos(interval * index++);
+      coords[c] = [x, y];
+    })
+    
+    nodedata =_.map(nodedata, function(node){
+      node.x = coords[node.category][0];
+      node.y = coords[node.category][1];
+      return node;
+    });
+  };
+
+  // draw the initial nodes
   var ptc3_network = function() {
-    init_scales(nodedata);
-        
+    init_scales();
     node = node.data(nodedata)
         .enter()
         .append("circle")
         .attr({
           "class": "node",
           "fill": function(d){ return c_scale(d.category); },
-          "r": 3,
+          "r": function(d){ return (d.r * 3) + 5; },
           "cx": function(d){ return d.cx; },
           "cy": function(d){ return d.cy; }
-        });
+        }); 
   };
 
   /* 
@@ -79,7 +107,7 @@
     var cur = 0;
     var ll  = flowdata.length
     function flow(){
-      console.log("cur: " + cur);
+      //console.log("cur: " + cur);
       selected = _.filter(flowdata[cur % ll], function(d){ return nodedata[d.source - 1].selected == true });
       
       packet.data(selected)
@@ -126,7 +154,7 @@
               x2: function(d){ return nodedata[d.target - 1].cx; },
               y2: function(d){ return nodedata[d.target - 1].cy; }
             })
-            .style("opacity", 0.5)
+            .style("opacity", 0.6)
           .transition()
             .ease('linear')
             .duration(500)
@@ -163,15 +191,13 @@
             .style('opacity', 0.1)
             .remove();
 
-
-
       cur++;
     }
     return setInterval(flow, 500);
   }
 
   var start_brushing = function(){
-    var defaultExtent = [[504, 275], [860, 495]],
+    var defaultExtent = [[347, 813], [555, 900]],
         x = d3.scale.identity().domain([0, width]),
         y = d3.scale.identity().domain([0, height]);
 
@@ -207,6 +233,7 @@
     brushended();
   };
 
+  
   d3.csv("../../data/PTC3_V.csv", function(data) {
     nodedata = data.map(function(d) {
       return {
@@ -218,8 +245,10 @@
         plot: d.plot
       };
     });
+   
     ptc3_network();
 
+    // load the time data
     d3.csv("../../data/F_PTC3_words_LD_E.csv", function(data) {
       var previous_timeslot;
 
@@ -232,9 +261,10 @@
         }
       });
 
-      console.log(flowdata);
+      //console.log(flowdata);
       start_brushing();
     });
+
   });
 })();
 
