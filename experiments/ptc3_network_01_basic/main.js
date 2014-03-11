@@ -28,18 +28,14 @@
                     .range([0 + margin.top, height - margin.bottom])
                     .nice();
 
-    var categories = _.union(_.map(dataset, function(x){ return x.label; }));
-    var c_scale = d3.scale.category20().domain(categories);
-
     node = node.data(dataset)
         .enter()
         .append("circle")
         .attr({
           "class": "node",
-          "fill": function(d){ return c_scale(d.label); },
           "r": 3,
-          "cx": function(d){ return x_scale(d.x); },
-          "cy": function(d){ return y_scale(d.y); }
+          "cx": function(d){ return x_scale(d.x)},
+          "cy": function(d){ return y_scale(d.y)}
         });
 
     d3.csv("../../data/F_PTC3_words_LD_E.csv", function(data) {
@@ -74,7 +70,6 @@
           .enter()
           .append("circle")
           .attr("class", '.packet')
-          .attr("fill", function(d){ return c_scale(node.data()[d.source -1].label); })
           .attr("r", 2)
           .attr("cx", function(d){ return x_scale(node.data()[d.source - 1].x); })
           .attr("cy", function(d){ return y_scale(node.data()[d.source - 1].y); })
@@ -82,11 +77,14 @@
           .duration(6000)
           .attr("cx", function(d){ return x_scale(node.data()[d.target - 1].x); })
           .attr("cy", function(d){ return y_scale(node.data()[d.target - 1].y); })
-          .remove();
-        
-        cur++;
+          .remove()
+          .call(endall, function(){  
+            console.log("endall");
+            cur++;
+            flow();
+          });
       }
-      setInterval(flow, 1000);
+      flow();
     });
   }
 
@@ -100,9 +98,6 @@
         area: d.area,
         plot: d.plot
       };
-    });
-    _.each(dataset, function(d){ 
-      d.label = d.label.slice(0, d.label.indexOf("_"));
     });
     ptc3_network(dataset);
   });
