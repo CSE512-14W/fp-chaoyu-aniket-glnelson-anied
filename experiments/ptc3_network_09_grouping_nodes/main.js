@@ -21,6 +21,11 @@
     });
 
     categories = _.uniq(_.map(nodedata, function(x){ return x.category; }));
+
+    _.each(nodedata, function(d){
+      d.r = _.filter(nodedata, function(x){ return x.category == d.category;}).length;
+    });
+
     c_scale = d3.scale.category20().domain(categories);
 
     circle_layout();
@@ -76,7 +81,7 @@
         .attr({
           "class": "node",
           "fill": function(d){ return c_scale(d.category); },
-          "r": 10,
+          "r": function(d){ return (d.r * 3) + 5; },
           "cx": function(d){ return d.cx; },
           "cy": function(d){ return d.cy; }
         }); 
