@@ -19,7 +19,7 @@
  * DRAW:
  * object(d)
  */
-(function(_){
+(function(){
   var flow = function() {
     var flow = {};
     flow.data = {},
@@ -75,4 +75,4 @@
 
     return flow;
   }; // end of d3.flow=
-})(_);
+})();

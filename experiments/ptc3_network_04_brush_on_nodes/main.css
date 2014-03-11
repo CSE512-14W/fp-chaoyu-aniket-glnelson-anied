@@ -11,14 +11,25 @@ body {
 
 .node {
   cursor: move;
+  fill-opacity: .3;
 }
 
 .node.fixed {
   fill: #f00;
 }
 
+.node.selected {
+  fill-opacity: 1.0;
+}
+
 .packet {
   fill: #ff0000;
   stroke: none;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
 }
 
