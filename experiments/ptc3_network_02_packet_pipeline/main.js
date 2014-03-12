@@ -67,6 +67,7 @@
           .attr("cx", function(d){ return x_scale(node.data()[d.source - 1].x); })
           .attr("cy", function(d){ return y_scale(node.data()[d.source - 1].y); })
         .transition()
+          .ease('linear')
           .duration(6000)
           .attr("cx", function(d){ return x_scale(node.data()[d.target - 1].x); })
           .attr("cy", function(d){ return y_scale(node.data()[d.target - 1].y); })

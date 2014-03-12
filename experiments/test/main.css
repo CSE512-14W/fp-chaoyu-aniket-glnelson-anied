@@ -11,7 +11,7 @@ body {
 
 .node {
   cursor: move;
-  fill-opacity: .3;
+  fill-opacity: .8;
 }
 
 .node.fixed {
@@ -22,9 +22,10 @@ body {
   fill-opacity: 1.0;
 }
 
-.packet {
-  fill: #ff0000;
-}
+/*.packet {*/
+/*  fill: #ff0000;*/
+/*  stroke: none;*/
+/*}*/
 
 .brush .extent {
   stroke: #fff;

@@ -78,17 +78,18 @@
                 return 0.1;
               }
             })
-            .attr("stroke", function(d) {
-              if(node.data()[d.source - 1].selected == true) {
-                return "#000";
-              } else {
-                return "none";
-              }
-            })
+            //.attr("stroke", function(d) {
+            //  if(node.data()[d.source - 1].selected == true) {
+            //    return "#000";
+            //  } else {
+            //    return "none";
+            //  }
+            //})
             .attr("r", 2)
             .attr("cx", function(d){ return node.data()[d.source - 1].cx; })
             .attr("cy", function(d){ return node.data()[d.source - 1].cy; })
           .transition()
+            .ease('linear')
             .duration(6000)
             .attr("cx", function(d){ return node.data()[d.target - 1].cx; })
             .attr("cy", function(d){ return node.data()[d.target - 1].cy; })
