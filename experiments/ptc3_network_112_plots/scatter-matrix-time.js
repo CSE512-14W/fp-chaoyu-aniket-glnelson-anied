@@ -4,8 +4,15 @@
 // http://mbostock.github.io/d3/talk/20111116/iris-splom.html
 //
 
-ScatterMatrix = function(nodedata, flowdata) {
-  this.__data = nodedata; 
+
+// TODO
+// add color linking
+// add brushing linking via shared brushed_node_set, brushed_edge_set
+ScatterMatrix = function(url, nodedata, flowdata) {
+  this.__url = url;
+  this.__nodedata = nodedata; // this reference does update
+                              // as nodedata does with
+                              // selections etc 
   this.__flowdata = flowdata; 
   this.__cell_size = 140;
 };
@@ -18,10 +25,13 @@ ScatterMatrix.prototype.cellSize = function(n) {
 ScatterMatrix.prototype.onData = function(cb) {
   if (this.__data) { cb(); return; }
   var self = this;
- // d3.csv(self.__url, function(data) {
-  //  self.__data = data;
- // });
-  cb();
+  d3.csv(self.__url, function(data) {
+    //self.__data = data;
+    self.__data = nodedata;
+    cb();
+  });
+  // put cb(); here before when set data manually
+  // and it mostly worked
 };
 
 ScatterMatrix.prototype.render = function () {
@@ -39,6 +49,8 @@ ScatterMatrix.prototype.render = function () {
     var data = self.__data;
 
     // Fetch data and get all string variables
+    // BUG in here for drilling and filtering options
+    //   has to do with they parse the data on their own via csv?
     var string_variables = [];
     var numeric_variables = [];
     var numeric_variable_values = {};

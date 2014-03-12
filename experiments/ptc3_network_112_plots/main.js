@@ -1,3 +1,7 @@
+// BUG
+// Somehow the way redraw is done
+// it seriously lags brushing / actions in other areas of the page
+
 (function(){
   var margin = {top: 40, right: 40, bottom: 40, left: 40},
       width = 900,
@@ -275,7 +279,7 @@
     window.flowdata = flowdata;
     window.nodedata = nodedata;
     // draw scatterplot matrix
-    var sm = new ScatterMatrix(nodedata, flowdata);
+    var sm = new ScatterMatrix("../../data/PTC3_V.csv",nodedata, flowdata);
     sm.render();
 
   });

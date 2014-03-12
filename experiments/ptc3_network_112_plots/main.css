@@ -44,12 +44,13 @@ body {
 
 /* based on scatter-matrix
  */
-.scatter-matrix-control { float: right; margin-left: 20px; }
+.scatter-matrix-control { float: left; margin-left: 20px; }
 .scatter-matrix-variable-control ul { list-style: none; padding-left: 10px; }
-.scatter-matrix-svg { float: right; margin-top: 15px; width: 1000px; }
+.scatter-matrix-svg { float: left; margin-top: 15px; width: 1000px; }
 
 /* TODO clean this up from scatter-matrix, change colors,
- * link / merge with ohter css */
+ * link / merge with ohter css 
+ * it is causing colors up top to disappear */
 svg { font-size: 14px; }
 
 .axis { shape-rendering: crispEdges; }
