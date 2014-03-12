@@ -263,9 +263,7 @@
     // load the time data
     d3.csv("../../data/F_PTC3_words_LD_E.csv", function(data) {
       var previous_timeslot;
-      var temp_flowby_node = {}; // sum up flow data by
-                            // in and out degree
-
+      
       _.each(data, function(d) {
         if(d.t == previous_timeslot) {
           flowdata[flowdata.length-1].push({"source": +d.src, "target": +d.snk})
