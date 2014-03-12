@@ -15,7 +15,7 @@
   var node = svg.selectAll(".node");
   var packet = svg.selectAll(".packet");
 
-  var nodedata, groupnode, flowdata = [];
+  var nodedata, groupnode, flowdata, flowbynode = [];
   var x_range, y_range, x_scale, y_scale, c_scale;
 
   var init_scales = function() {
@@ -87,7 +87,8 @@
             "fill": function(d){ return c_scale(d.category); },
             "r": function(d){ return (d.r * 3) + 5; },
             "cx": function(d){ return d.cx; },
-            "cy": function(d){ return d.cy; }
+            "cy": function(d){ return d.cy; },
+	    "node_id": function(d,i){ return i;}
           })
           .on('mouseover', function (d) {
             tooltip_update(d.category)
@@ -262,6 +263,8 @@
     // load the time data
     d3.csv("../../data/F_PTC3_words_LD_E.csv", function(data) {
       var previous_timeslot;
+      var temp_flowby_node = {}; // sum up flow data by
+                            // in and out degree
 
       _.each(data, function(d) {
         if(d.t == previous_timeslot) {
