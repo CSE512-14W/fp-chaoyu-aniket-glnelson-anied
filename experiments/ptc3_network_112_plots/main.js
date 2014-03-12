@@ -15,7 +15,10 @@
   var node = svg.selectAll(".node");
   var packet = svg.selectAll(".packet");
 
-  var nodedata, groupnode, flowdata, flowbynode = [];
+  var nodedata = [];
+  var groupnode = [];
+  var flowdata = [];
+
   var x_range, y_range, x_scale, y_scale, c_scale;
 
   var init_scales = function() {
