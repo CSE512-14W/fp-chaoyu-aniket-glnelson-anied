@@ -91,12 +91,13 @@
 	    "node_id": function(d,i){ return i;}
           })
           .on('mouseover', function (d) {
-            tooltip_update(d.category)
+            tooltip_update(d.category) 
             tooltip_move(event.pageX, event.pageY)})
           .on('mousemove', function (d) {
             tooltip_move(event.pageX, event.pageY)})
           .on('mouseout', function (d) {
             tooltip_close()}); 
+          // add selection / linking updating here
   };
 
   /* 
@@ -254,23 +255,46 @@
         y: +d.ycoord,
         z: +d.zcoord,
         area: d.area,
-        plot: d.plot
+        plot: d.plot,
+	time_data: new Array() // index = t, [in_degree, out_degree]
       };
     });
-   
+    
     ptc3_network();
+    
+    var array_in_out_size_of_nodes = function(nodes){
+      var x = [];
+      _.each(nodes, function(d){
+        x.push([0,0]);
+      });
+      return x;
+    };
 
     // load the time data
     d3.csv("../../data/F_PTC3_words_LD_E.csv", function(data) {
       var previous_timeslot;
-      
+
+      var in_out_degree_at_timeslot = 1;
+
       _.each(data, function(d) {
         if(d.t == previous_timeslot) {
-          flowdata[flowdata.length-1].push({"source": +d.src, "target": +d.snk})
+          flowdata[flowdata.length-1].push({"source": +d.src, "target": +d.snk});
+	  in_out_degree_at_timeslot[+d.src-1][1]+= 1;
+	  in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
         } else {
+          if (in_out_degree_at_timeslot!= 1){
+	    // load the in_out_degree into nodedata
+	    for( var i = 0; i<nodedata.length; i++){
+	      nodedata[i]["time_data"].push(in_out_degree_at_timeslot[i]);
+	    };
+	  };
+	  in_out_degree_at_timeslot = array_in_out_size_of_nodes(nodedata);
           previous_timeslot = d.t;
           flowdata.push([{"source": +d.src, "target": +d.snk}]);
-        }
+	  in_out_degree_at_timeslot[+d.src-1][1]+= 1;
+	  in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
+
+        };
       });
 
       //console.log(flowdata);
