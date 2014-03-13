@@ -221,6 +221,8 @@
     d3.select("#controller g")
       .transition()
       .call(controller_brusher.extent([cur, cur+6]));
+
+    update_textbox(cur);
   }
 
 
