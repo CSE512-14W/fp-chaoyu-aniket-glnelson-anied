@@ -68,3 +68,13 @@ function tooltip_move(x, y) {
 function tooltip_close() {
 	tooltip.style("visibility", "hidden");
 }
+
+function add_tooltip(selection) {
+  selection.on('mouseover', function (d) {
+              tooltip_update(d.category)
+              tooltip_move(event.pageX, event.pageY)})
+            .on('mousemove', function (d) {
+              tooltip_move(event.pageX, event.pageY)})
+            .on('mouseout', function (d) {
+              tooltip_close()});
+}
