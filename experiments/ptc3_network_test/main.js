@@ -1,7 +1,3 @@
-// BUG
-// Somehow the way redraw is done
-// it seriously lags brushing / actions in other areas of the page
-
 (function(){
   var margin = {top: 40, right: 40, bottom: 40, left: 40},
       width = 900,
@@ -15,10 +11,7 @@
   var node = svg.selectAll(".node");
   var packet = svg.selectAll(".packet");
 
-  var nodedata = [];
-  var groupnode = [];
-  var flowdata = [];
-
+  var nodedata, groupnode, flowdata = [];
   var x_range, y_range, x_scale, y_scale, c_scale;
 
   var init_scales = function() {
@@ -81,26 +74,17 @@
 
   // draw the initial nodes
   var ptc3_network = function() {
-    init_scales();
     node = node.data(nodedata)
         .enter()
         .append("circle")
           .attr({
             "class": function(d){ return "node " + d.category; },
             "fill": function(d){ return c_scale(d.category); },
-            "r": function(d){ return (d.r * 3) + 5; },
+            "r": function(d){ return (d.r * 4) + 7; },
             "cx": function(d){ return d.cx; },
-            "cy": function(d){ return d.cy; },
-	    "node_id": function(d,i){ return i;}
+            "cy": function(d){ return d.cy; }
           })
-          .on('mouseover', function (d) {
-            tooltip_update(d.category) 
-            tooltip_move(event.pageX, event.pageY)})
-          .on('mousemove', function (d) {
-            tooltip_move(event.pageX, event.pageY)})
-          .on('mouseout', function (d) {
-            tooltip_close()}); 
-          // add selection / linking updating here
+        .call(add_tooltip); 
   };
 
   /* 
@@ -118,69 +102,77 @@
     return starting_point + (ratio * delta);
   }
 
+  var animation_duration = 2500;
+  var time_window = 5;
   var ptc3_flow = function(){
     console.log("redraw");
     var cur = 0;
-    var ll  = flowdata.length
+    var ll  = flowdata.length;
+    
+
     function flow(){
-      //console.log("cur: " + cur);
-      selected = _.filter(flowdata[cur % ll], function(d){ return nodedata[d.source - 1].selected == true });
+      console.log("cur: " + cur);
+      selected = _.filter(flowdata[cur % ll], function(d){ return nodedata[d.source].selected == true });
       
+      var cutting_ratio = 1 / time_window; // 0.2
+      var draw_tail_duration = animation_duration / time_window; // 500
+      var flow_duration = animation_duration - draw_tail_duration; // 2000
+
       packet.data(selected)
             .enter()
             .append("line")
-            .style("stroke", function(d){ return c_scale(nodedata[d.source -1].category); })
+            .style("stroke", function(d){ return c_scale(nodedata[d.source].category); })
             .attr({
-              x1: function(d){ return nodedata[d.source - 1].cx; },
-              y1: function(d){ return nodedata[d.source - 1].cy; }
+              x1: function(d){ return nodedata[d.source].cx; },
+              y1: function(d){ return nodedata[d.source].cy; }
             })
             .attr({
-              x2: function(d){ return nodedata[d.source - 1].cx; },
-              y2: function(d){ return nodedata[d.source - 1].cy; }
+              x2: function(d){ return nodedata[d.source].cx; },
+              y2: function(d){ return nodedata[d.source].cy; }
             })
             .style("opacity", 0)
           .transition()
             .ease('linear')
-            .duration(500)
+            .duration(draw_tail_duration)
             .attr({
-              x1: function(d){ return nodedata[d.source - 1].cx; },
-              y1: function(d){ return nodedata[d.source - 1].cy; }
+              x1: function(d){ return nodedata[d.source].cx; },
+              y1: function(d){ return nodedata[d.source].cy; }
             })
             .attr({
               x2: function(d){ 
-                return slice_line(0.2, nodedata[d.source - 1].cx, nodedata[d.target - 1].cx);
+                return slice_line(cutting_ratio, nodedata[d.source].cx, nodedata[d.target].cx);
               },
               y2: function(d){ 
-                return slice_line(0.2, nodedata[d.source - 1].cy, nodedata[d.target - 1].cy);
+                return slice_line(cutting_ratio, nodedata[d.source].cy, nodedata[d.target].cy);
               }
             })
             .style("opacity", 0.1)
           .transition()
             .ease('linear')
-            .duration(2000)
+            .duration(flow_duration)
             .attr({
               x1: function(d){ 
-                return slice_line(0.8, nodedata[d.source - 1].cx, nodedata[d.target - 1].cx);
+                return slice_line(1 - cutting_ratio, nodedata[d.source].cx, nodedata[d.target].cx);
               },
               y1: function(d){ 
-                return slice_line(0.8, nodedata[d.source - 1].cy, nodedata[d.target - 1].cy);
+                return slice_line(1 - cutting_ratio, nodedata[d.source].cy, nodedata[d.target].cy);
               }
             })
             .attr({
-              x2: function(d){ return nodedata[d.target - 1].cx; },
-              y2: function(d){ return nodedata[d.target - 1].cy; }
+              x2: function(d){ return nodedata[d.target].cx; },
+              y2: function(d){ return nodedata[d.target].cy; }
             })
             .style("opacity", 0.6)
           .transition()
             .ease('linear')
-            .duration(500)
+            .duration(draw_tail_duration)
             .attr({
-              x1: function(d){ return nodedata[d.target - 1].cx; },
-              y1: function(d){ return nodedata[d.target - 1].cy; }
+              x1: function(d){ return nodedata[d.target].cx; },
+              y1: function(d){ return nodedata[d.target].cy; }
             })
             .attr({
-              x2: function(d){ return nodedata[d.target - 1].cx; },
-              y2: function(d){ return nodedata[d.target - 1].cy; }
+              x2: function(d){ return nodedata[d.target].cx; },
+              y2: function(d){ return nodedata[d.target].cy; }
             })
             .style("opacity", 0.1)
             .remove();
@@ -189,18 +181,18 @@
             .enter()
             .append("circle")
             .attr("class", '.packet')
-            .attr("fill", function(d){ return c_scale(nodedata[d.source -1].category); })
+            .attr("fill", function(d){ return c_scale(nodedata[d.source].category); })
             .style("opacity", 0)
             .attr("r", 1)
-            .attr("cx", function(d){ return nodedata[d.source - 1].cx; })
-            .attr("cy", function(d){ return nodedata[d.source - 1].cy; })
+            .attr("cx", function(d){ return nodedata[d.source].cx; })
+            .attr("cy", function(d){ return nodedata[d.source].cy; })
           .transition()
             .ease('linear')
-            .duration(2500)
+            .duration(animation_duration)
             .style("opacity", 0.9)
             .attr("r", 4)
-            .attr("cx", function(d){ return nodedata[d.target - 1].cx; })
-            .attr("cy", function(d){ return nodedata[d.target - 1].cy; })
+            .attr("cx", function(d){ return nodedata[d.target].cx; })
+            .attr("cy", function(d){ return nodedata[d.target].cy; })
           .transition()
             .duration(300)
             .attr("r", 0)
@@ -210,7 +202,7 @@
       cur++;
     }
     return setInterval(flow, 500);
-  }; // end ptc3_flow  
+  }
 
   var start_brushing = function(){
     var defaultExtent = [[7, 132], [216, 450]],
@@ -246,6 +238,8 @@
       .call(brush)
       .call(brush.event);
     
+    ptc3_network();
+    brushed();
     brushended();
   };
 
@@ -258,56 +252,27 @@
         y: +d.ycoord,
         z: +d.zcoord,
         area: d.area,
-        plot: d.plot,
-        time_data: new Array() // index = t, [in_degree, out_degree]
+        plot: d.plot
       };
     });
-    
-    ptc3_network();
-    
-    var array_in_out_size_of_nodes = function(nodes){
-      var x = [];
-      _.each(nodes, function(d){
-        x.push([0,0]);
-      });
-      return x;
-    };
+    init_scales();
 
     // load the time data
     d3.csv("../../data/F_PTC3_words_LD_E.csv", function(data) {
       var previous_timeslot;
 
-      var in_out_degree_at_timeslot = 1;
-
       _.each(data, function(d) {
         if(d.t == previous_timeslot) {
-          flowdata[flowdata.length-1].push({"source": +d.src, "target": +d.snk});
-          in_out_degree_at_timeslot[+d.src-1][1]+= 1;
-          in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
+          flowdata[flowdata.length-1].push({"source": +d.src -1, "target": +d.snk - 1})
         } else {
-          if (in_out_degree_at_timeslot!= 1){
-            // load the in_out_degree into nodedata
-            for( var i = 0; i<nodedata.length; i++){
-              nodedata[i]["time_data"].push(in_out_degree_at_timeslot[i]);
-            };
-          };
-          in_out_degree_at_timeslot = array_in_out_size_of_nodes(nodedata);
           previous_timeslot = d.t;
-          flowdata.push([{"source": +d.src, "target": +d.snk}]);
-          in_out_degree_at_timeslot[+d.src-1][1]+= 1;
-          in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
-        };
+          flowdata.push([{"source": +d.src - 1, "target": +d.snk -1}]);
+        }
       });
 
       //console.log(flowdata);
       start_brushing();
     });
-
-    window.flowdata = flowdata;
-    window.nodedata = nodedata;
-    // draw scatterplot matrix
-    var sm = new ScatterMatrix("../../data/PTC3_V.csv",nodedata, flowdata);
-    sm.render();
 
   });
 })();

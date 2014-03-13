@@ -107,7 +107,7 @@
     var cur = 0;
     var ll  = flowdata.length
     function flow(){
-      //console.log("cur: " + cur);
+      console.log("cur: " + cur);
       selected = _.filter(flowdata[cur % ll], function(d){ return nodedata[d.source - 1].selected == true });
       
       packet.data(selected)
