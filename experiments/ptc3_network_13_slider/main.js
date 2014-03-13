@@ -115,8 +115,7 @@
                             .nice();
 
     var brushed = function() {
-      //if (flow_id !== undefined) clearInterval(flow_id);
-      console.log("c brushed");
+      if (flow_id !== undefined) clearInterval(flow_id);
     };
 
     var brushended = function() {
@@ -128,8 +127,7 @@
       current_time_step = start;
 
       d3.select(this).transition()
-        .call(brush.extent(target_extent))
-        .call(brush.event)
+        .call(brush.extent(target_extent));
     };
 
     var brush = d3.svg.brush()
