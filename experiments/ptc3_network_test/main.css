@@ -27,11 +27,6 @@ body {
 /*  stroke: none;*/
 /*}*/
 
-.brush .extent {
-  stroke: #fff;
-  fill-opacity: .125;
-  shape-rendering: crispEdges;
-}
 
 .tooltip_title {
   font-size: 12pt;
@@ -40,4 +35,51 @@ body {
 .tooltip_function {
   font-style: italic;
   font-size: 10pt;
+}
+
+
+
+xis text {
+  font: 11px sans-serif;
+}
+
+.axis path {
+  display: none;
+}
+
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.grid-background {
+  fill: #ddd;
+}
+
+.grid line,
+.grid path {
+  fill: none;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
+
+.grid .minor.tick line {
+  stroke-opacity: .5;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+#controller .brush .extent {
+  stroke: #000;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+.controller-background {
+  fill: #BBB;
 }

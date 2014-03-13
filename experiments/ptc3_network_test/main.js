@@ -3,7 +3,7 @@
       width = 900,
       height = 900;
 
-  var svg = d3.select("body")
+  var svg = d3.select("#graph")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height);
@@ -85,6 +85,51 @@
             "cy": function(d){ return d.cy; }
           })
         .call(add_tooltip); 
+  };
+
+  var draw_contoller = function(){
+    var controller_height = 200;
+    var controller_width = 900;
+    var button = { width: 40, height: 50}
+    
+    var svg = d3.select("#controller")
+                .append("svg")
+                .attr("width", controller_width)
+                .attr("height", controller_height);
+
+    var controller_scale = d3.scale.linear()
+                            .domain([0, 600])
+                            .range([0 + margin.left + button.width,  controller_width - margin.left])
+                            .nice();
+
+    var brush = d3.svg.brush()
+                  .x(controller_scale)
+                  .extent([0, 150])
+                  .on("brush", brushed)
+                  .on("brushend", brushended);
+
+    var brushed = function() {
+    };
+
+
+    var brushended = function() {
+    };
+
+    svg.append("rect")
+        .attr({
+          width: 900,
+          height: 200,
+          class: 'controller-background'
+        });
+
+    var gBrush = svg.append("g")
+                    .attr("class", "brush")
+                    .call(brush)
+                    .call(brush.event);
+                    gBrush
+
+    gBrush.selectAll("rect")
+      .attr("height", controller_height)
   };
 
   /* 
@@ -301,6 +346,7 @@
 
       //console.log(flowdata);
       start_brushing();
+      draw_contoller();
     });
 
   });
