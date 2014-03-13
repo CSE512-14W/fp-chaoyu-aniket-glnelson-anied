@@ -9,7 +9,17 @@ body {
   stroke-width: 1.5px;
 }
 
+.title {
+  text-align: center;
+  font-size: 22pt;
+}
+
 #graph svg {
+  display: block;
+  margin: auto;
+}
+
+#controller svg {
   display: block;
   margin: auto;
 }
@@ -86,3 +96,5 @@ body {
 .controller-background {
   fill: #ddd;
 }
+
+

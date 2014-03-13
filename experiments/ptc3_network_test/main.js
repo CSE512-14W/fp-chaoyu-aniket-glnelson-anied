@@ -1,7 +1,7 @@
 (function(){
   var margin = {top: 40, right: 40, bottom: 40, left: 40},
-      width = 800,
-      height = 500;
+      width = 600,
+      height = 600;
 
   var svg = d3.select("#graph")
                 .append("svg")
@@ -14,6 +14,16 @@
 
   var nodedata, groupnode, flowdata = [];
   var x_range, y_range, x_scale, y_scale, c_scale;
+
+  var current_time_step = 0;
+  var controller_brusher;
+
+  var flow_id;
+  // Start animtaion
+  function start(){
+    flow_id = ptc3_flow();
+  }
+  window.start = start;
 
   var init_scales = function() {
 
@@ -88,39 +98,47 @@
         .call(add_tooltip); 
   };
 
-  var draw_contoller = function(){
-    var controller_height = 100;
-    var controller_width = 800;
-    var button = { width: 40, height: 50};
+  var graph_contoller = function(){
+    var controller_height = 40;
+    var controller_width = 900;
     var x = d3.scale.identity().domain([0, controller_width]);
+    var defaultExtent = [0,6];
     
     var svg = d3.select("#controller")
                 .append("svg")
                 .attr("width", controller_width)
                 .attr("height", controller_height);
 
-    //var controller_scale = d3.scale.linear()
-    //                        .domain([0, 600])
-    //                        .range([0 + margin.left + button.width,  controller_width - margin.left])
-    //                        .nice();
+    var controller_scale = d3.scale.linear()
+                            .domain([0, 600])
+                            .range([0, controller_width])
+                            .nice();
+
+    var brushed = function() {
+      //if (flow_id !== undefined) clearInterval(flow_id);
+      console.log("c brushed");
+    };
+
+    var brushended = function() {
+      console.log("c brushended");
+
+      var extent = brush.extent();
+      var start = Math.floor(extent[0])
+      var target_extent = [start, start + 6];
+      current_time_step = start;
+
+      d3.select(this).transition()
+        .call(brush.extent(target_extent))
+        .call(brush.event)
+    };
 
     var brush = d3.svg.brush()
-                  .x(x)
-                  .extent([100, 108])
+                  .x(controller_scale)
+                  .extent(defaultExtent)
                   .on("brush", brushed)
                   .on("brushend", brushended);
 
-    var brushed = function() {
-      var extent = brush.extent();
-      console.log(extent);
-
-    };
-
-
-    var brushended = function() {
-    };
-
-    svg.append("rect")
+       svg.append("rect")
         .attr({
           width: controller_width,
           height: controller_height,
@@ -136,6 +154,7 @@
     gBrush.selectAll("rect")
       .attr("height", controller_height)
 
+    return brush;
   };
 
   /* 
@@ -156,13 +175,21 @@
   var animation_duration = 3000;
   var time_divisions = 5;
 
+  var update_time_step = function(cur) {
+    current_time_step = cur;
+    d3.select("#controller g")
+      .transition()
+      .call(controller_brusher.extent([cur, cur+6]))
+  }
+
   var ptc3_flow = function(){
     console.log("redraw");
-    var cur = 0;
+    var cur = current_time_step;
     var ll  = flowdata.length;
 
     function flow(){
-      //console.log("cur: " + cur);
+      if(cur >= ll){ cur = 0; current_time_step = 0;}
+      console.log("cur: " + cur);
       selected = _.filter(flowdata[cur % ll], function(d){ return nodedata[d.source].selected == true });
       
       var cutting_ratio = 1.0 / time_divisions; // 0.2
@@ -251,17 +278,10 @@
             .remove();
 
       cur++;
+      update_time_step(cur);
     }
     return setInterval(flow, 500);
   }
-
-
-  var flow_id;
-  // Start animtaion
-  function start(){
-    flow_id = ptc3_flow();
-  }
-  window.start = start;
 
   var start_brushing = function(){
     var defaultExtent = [[7, 132], [216, 450]],
@@ -352,7 +372,7 @@
 
       //console.log(flowdata);
       start_brushing();
-      draw_contoller();
+      controller_brusher = graph_contoller();
     });
 
   });
