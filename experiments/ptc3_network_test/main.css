@@ -9,9 +9,14 @@ body {
   stroke-width: 1.5px;
 }
 
+#graph svg {
+  display: block;
+  margin: auto;
+}
+
 .node {
   cursor: move;
-  fill-opacity: .8;
+  fill-opacity: .3;
 }
 
 .node.fixed {
@@ -37,11 +42,9 @@ body {
   font-size: 10pt;
 }
 
-
-
-xis text {
-  font: 11px sans-serif;
-}
+/*.axis text {*/
+/*  font: 11px sans-serif;*/
+/*}*/
 
 .axis path {
   display: none;
@@ -81,5 +84,5 @@ xis text {
 }
 
 .controller-background {
-  fill: #BBB;
+  fill: #ddd;
 }

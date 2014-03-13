@@ -1,12 +1,13 @@
 (function(){
   var margin = {top: 40, right: 40, bottom: 40, left: 40},
-      width = 900,
-      height = 900;
+      width = 800,
+      height = 500;
 
   var svg = d3.select("#graph")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height);
+                //.attr("class", 'graph-svg')
 
   var node = svg.selectAll(".node");
   var packet = svg.selectAll(".packet");
@@ -80,7 +81,7 @@
           .attr({
             "class": function(d){ return "node " + d.category; },
             "fill": function(d){ return c_scale(d.category); },
-            "r": function(d){ return (d.r * 4) + 7; },
+            "r": function(d){ return (d.r * 3) + 4; },
             "cx": function(d){ return d.cx; },
             "cy": function(d){ return d.cy; }
           })
@@ -88,27 +89,31 @@
   };
 
   var draw_contoller = function(){
-    var controller_height = 200;
-    var controller_width = 900;
-    var button = { width: 40, height: 50}
+    var controller_height = 100;
+    var controller_width = 800;
+    var button = { width: 40, height: 50};
+    var x = d3.scale.identity().domain([0, controller_width]);
     
     var svg = d3.select("#controller")
                 .append("svg")
                 .attr("width", controller_width)
                 .attr("height", controller_height);
 
-    var controller_scale = d3.scale.linear()
-                            .domain([0, 600])
-                            .range([0 + margin.left + button.width,  controller_width - margin.left])
-                            .nice();
+    //var controller_scale = d3.scale.linear()
+    //                        .domain([0, 600])
+    //                        .range([0 + margin.left + button.width,  controller_width - margin.left])
+    //                        .nice();
 
     var brush = d3.svg.brush()
-                  .x(controller_scale)
-                  .extent([0, 150])
+                  .x(x)
+                  .extent([100, 108])
                   .on("brush", brushed)
                   .on("brushend", brushended);
 
     var brushed = function() {
+      var extent = brush.extent();
+      console.log(extent);
+
     };
 
 
@@ -117,8 +122,8 @@
 
     svg.append("rect")
         .attr({
-          width: 900,
-          height: 200,
+          width: controller_width,
+          height: controller_height,
           class: 'controller-background'
         });
 
@@ -130,6 +135,7 @@
 
     gBrush.selectAll("rect")
       .attr("height", controller_height)
+
   };
 
   /* 
@@ -156,7 +162,7 @@
     var ll  = flowdata.length;
 
     function flow(){
-      console.log("cur: " + cur);
+      //console.log("cur: " + cur);
       selected = _.filter(flowdata[cur % ll], function(d){ return nodedata[d.source].selected == true });
       
       var cutting_ratio = 1.0 / time_divisions; // 0.2
