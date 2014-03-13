@@ -102,8 +102,8 @@
     return starting_point + (ratio * delta);
   }
 
-  var animation_duration = 2500;
-  var time_window = 5;
+  var animation_duration = 3000;
+  var time_divisions = 5;
   var ptc3_flow = function(){
     console.log("redraw");
     var cur = 0;
@@ -114,8 +114,8 @@
       console.log("cur: " + cur);
       selected = _.filter(flowdata[cur % ll], function(d){ return nodedata[d.source].selected == true });
       
-      var cutting_ratio = 1 / time_window; // 0.2
-      var draw_tail_duration = animation_duration / time_window; // 500
+      var cutting_ratio = 1.0 / time_divisions; // 0.2
+      var draw_tail_duration = animation_duration / time_divisions; // 500
       var flow_duration = animation_duration - draw_tail_duration; // 2000
 
       packet.data(selected)
@@ -252,21 +252,43 @@
         y: +d.ycoord,
         z: +d.zcoord,
         area: d.area,
-        plot: d.plot
+        plot: d.plot,
+        time_data: new Array() // index = t, [in_degree, out_degree]
       };
     });
     init_scales();
+ 
+    var array_in_out_size_of_nodes = function(nodes){
+      var x = [];
+      _.each(nodes, function(d){
+        x.push([0,0]);
+      });
+      return x;
+    };
 
     // load the time data
     d3.csv("../../data/F_PTC3_words_LD_E.csv", function(data) {
       var previous_timeslot;
+      var in_out_degree_at_timeslot = 1;
 
       _.each(data, function(d) {
         if(d.t == previous_timeslot) {
           flowdata[flowdata.length-1].push({"source": +d.src -1, "target": +d.snk - 1})
+          in_out_degree_at_timeslot[+d.src-1][1]+= 1;
+          in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
+
         } else {
+          if (in_out_degree_at_timeslot!= 1){
+            // load the in_out_degree into nodedata
+            for( var i = 0; i<nodedata.length; i++){
+              nodedata[i]["time_data"].push(in_out_degree_at_timeslot[i]);
+            };
+          };
+          in_out_degree_at_timeslot = array_in_out_size_of_nodes(nodedata);
           previous_timeslot = d.t;
           flowdata.push([{"source": +d.src - 1, "target": +d.snk -1}]);
+          in_out_degree_at_timeslot[+d.src-1][1]+= 1;
+          in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
         }
       });
 
