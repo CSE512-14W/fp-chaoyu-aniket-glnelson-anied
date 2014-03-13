@@ -23,6 +23,9 @@
   function start(){
     flow_id = ptc3_flow();
   }
+  function stop(){
+    if (flow_id !== undefined) clearInterval(flow_id);
+  }
   window.start = start;
 
   var init_scales = function() {
@@ -99,15 +102,45 @@
   };
 
   var graph_contoller = function(){
+    var controller_area = d3.select('#controller')
+      .attr('width', 600)
+      .attr('height', 60)
+      .style("display","block")
+      .style("margin","auto")
+      .style("width","600px");
+
+    // Add control buttons
+    controller_area.append("input")
+      .attr("type","button")
+      .attr("class","btn btn-default")
+      .attr("value", "Start")
+      .on("click", start);
+    controller_area.append("input")
+      .attr("type","button")
+      .attr("class","btn btn-default")
+      .attr("value", "Stop")
+      .on("click", stop);
+    controller_area.append("input")
+      .attr('id', 'textbox_timestart')
+      .style("width","50px")
+      .attr("value", "0");
+      // .on("click", time_update(0, 7));
+    controller_area.append("span")
+      .text(' to ');
+    controller_area.append("input")
+      .attr('id', 'textbox_timestop')
+      .style("width","50px")
+      .attr("value", "7");
+      // .on("click", time_update(0, 7));
+
     var controller_height = 40;
-    var controller_width = 900;
+    var controller_width = 600;
     var x = d3.scale.identity().domain([0, controller_width]);
     var defaultExtent = [0,6];
     
-    var svg = d3.select("#controller")
-                .append("svg")
-                .attr("width", controller_width)
-                .attr("height", controller_height);
+    var slidersvg = controller_area.append("svg")
+        .attr("width", controller_width)
+        .attr("height", controller_height);
 
     var controller_scale = d3.scale.linear()
                             .domain([0, 600])
@@ -115,7 +148,7 @@
                             .nice();
 
     var brushed = function() {
-      if (flow_id !== undefined) clearInterval(flow_id);
+      stop();
     };
 
     var brushended = function() {
@@ -136,14 +169,14 @@
                   .on("brush", brushed)
                   .on("brushend", brushended);
 
-       svg.append("rect")
+    slidersvg.append("rect")
         .attr({
           width: controller_width,
           height: controller_height,
           class: 'controller-background'
         });
 
-    var gBrush = svg.append("g")
+    var gBrush = slidersvg.append("g")
                     .attr("class", "brush")
                     .call(brush)
                     .call(brush.event);
@@ -178,6 +211,10 @@
     d3.select("#controller g")
       .transition()
       .call(controller_brusher.extent([cur, cur+6]))
+    d3.select("#textbox_timestart")
+      .attr("value", cur);
+    d3.select("#textbox_timestop")
+      .attr("value", cur + 6);
   }
 
   var ptc3_flow = function(){
