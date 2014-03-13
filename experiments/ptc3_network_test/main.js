@@ -104,11 +104,11 @@
 
   var animation_duration = 3000;
   var time_divisions = 5;
+
   var ptc3_flow = function(){
     console.log("redraw");
     var cur = 0;
     var ll  = flowdata.length;
-    
 
     function flow(){
       console.log("cur: " + cur);
@@ -204,12 +204,21 @@
     return setInterval(flow, 500);
   }
 
+
+  var flow_id;
+  // Start animtaion
+  function start(){
+    flow_id = ptc3_flow();
+  }
+  window.start = start;
+
   var start_brushing = function(){
     var defaultExtent = [[7, 132], [216, 450]],
         x = d3.scale.identity().domain([0, width]),
         y = d3.scale.identity().domain([0, height]);
 
     var brushed = function() {
+      if (flow_id !== undefined) clearInterval(flow_id);
       var extent = brush.extent();
       console.log(extent);
       node.each(function(d) {
@@ -219,11 +228,9 @@
       node.classed("selected", function(d){ return d.selected;})
     };
 
-    var flow_id;
+
     var brushended = function() {
       console.log("brushended");
-      if (flow_id !== undefined) clearInterval(flow_id);
-      flow_id = ptc3_flow();
     };
 
     var brush = d3.svg.brush()
