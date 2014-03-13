@@ -8,6 +8,8 @@
 // TODO
 // add color linking
 // add brushing linking via shared brushed_node_set, brushed_edge_set
+// what data do we want
+// node[time] [sum_in] [sum_out]
 ScatterMatrix = function(url, nodedata, flowdata) {
   this.__url = url;
   this.__nodedata = nodedata; // this reference does update
