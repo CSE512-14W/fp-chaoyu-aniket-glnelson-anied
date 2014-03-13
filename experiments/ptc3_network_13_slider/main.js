@@ -101,7 +101,15 @@
         .call(add_tooltip); 
   };
 
+  var update_textbox = function(start){
+      d3.select("#textbox_timestart")
+        .attr("value", start);
+      d3.select("#textbox_timestop")
+        .attr("value", start + 6);
+    };
+
   var graph_contoller = function(){
+    
     var controller_area = d3.select('#controller')
       .attr('width', 600)
       .attr('height', 60)
@@ -148,6 +156,9 @@
                             .nice();
 
     var brushed = function() {
+      var extent = brush.extent();
+      var start = Math.floor(extent[0])
+      update_textbox(start);
       stop();
     };
 
@@ -158,7 +169,6 @@
       var start = Math.floor(extent[0])
       var target_extent = [start, start + 6];
       current_time_step = start;
-
       d3.select(this).transition()
         .call(brush.extent(target_extent));
     };
@@ -210,12 +220,9 @@
     current_time_step = cur;
     d3.select("#controller g")
       .transition()
-      .call(controller_brusher.extent([cur, cur+6]))
-    d3.select("#textbox_timestart")
-      .attr("value", cur);
-    d3.select("#textbox_timestop")
-      .attr("value", cur + 6);
+      .call(controller_brusher.extent([cur, cur+6]));
   }
+
 
   var ptc3_flow = function(){
     console.log("redraw");
