@@ -106,7 +106,7 @@
           })
         .call(add_tooltip)
         .append('div')
-          attr({
+          .attr({
             "class": function(d){ return "nodename" + d.category; },
             "cx": function(d){ return d.cx; },
             "cy": function(d){ return d.cy; }
@@ -143,16 +143,18 @@
       .on("click", stop);
     controller_area.append("input")
       .attr('id', 'textbox_timestart')
-      .style("width","50px")
+      .style("width","40px")
       .attr("value", "0");
       // .on("click", time_update(0, 7));
     controller_area.append("span")
       .text(' to ');
     controller_area.append("input")
       .attr('id', 'textbox_timestop')
-      .style("width","50px")
+      .style("width","40px")
       .attr("value", "7");
       // .on("click", time_update(0, 7));
+    controller_area.append("span")
+      .text(' ms');
 
     var controller_height = 40;
     var controller_width = 600;
