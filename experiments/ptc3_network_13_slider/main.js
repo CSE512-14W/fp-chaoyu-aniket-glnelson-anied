@@ -63,8 +63,14 @@
     _.each(nodedata, function(d) {
       d.cx = x_scale(d.x);
       d.cy = y_scale(d.y);
+      console.log(d.cx + " " + d.cy + " " + d.category)
+      // svg.append("div")
+      //   .style({"display":"block",
+      //     "position":"absolute",
+      //     "cx": d.cx,
+      //     "cy": d.cy})
+      //   .text(d.category); 
     });
-
   };
 
   var circle_layout = function() {
@@ -98,7 +104,14 @@
             "cx": function(d){ return d.cx; },
             "cy": function(d){ return d.cy; }
           })
-        .call(add_tooltip); 
+        .call(add_tooltip)
+        .append('div')
+          attr({
+            "class": function(d){ return "nodename" + d.category; },
+            "cx": function(d){ return d.cx; },
+            "cy": function(d){ return d.cy; }
+          })
+          .text(function(d){ return "nodename" + d.category; });
   };
 
   var update_textbox = function(start){

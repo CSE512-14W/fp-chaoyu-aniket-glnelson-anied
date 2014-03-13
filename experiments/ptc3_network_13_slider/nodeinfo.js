@@ -65,7 +65,7 @@ function tooltip_move(x, y) {
 
 	tooltip.style("top" , (y - 60) + "px")
 
-	if(x < 500)
+	if(x > 750)
 		tooltip.style("left", (x + 30) + "px");
 	else
 		tooltip.style("left", (x - 210) + "px");
