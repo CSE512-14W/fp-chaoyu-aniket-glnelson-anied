@@ -197,7 +197,7 @@
   }
 
   var start_brushing = function(){
-    var defaultExtent = [[347, 813], [555, 900]],
+    var defaultExtent = [[7, 132], [216, 450]],
         x = d3.scale.identity().domain([0, width]),
         y = d3.scale.identity().domain([0, height]);
 
@@ -229,8 +229,6 @@
       .attr("class", "brush")
       .call(brush)
       .call(brush.event);
-    
-    brushended();
   };
 
   

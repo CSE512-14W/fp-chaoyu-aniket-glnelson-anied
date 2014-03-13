@@ -74,14 +74,13 @@
 
   // draw the initial nodes
   var ptc3_network = function() {
-    init_scales();
     node = node.data(nodedata)
         .enter()
         .append("circle")
           .attr({
             "class": function(d){ return "node " + d.category; },
             "fill": function(d){ return c_scale(d.category); },
-            "r": function(d){ return (d.r * 3) + 5; },
+            "r": function(d){ return (d.r * 4) + 7; },
             "cx": function(d){ return d.cx; },
             "cy": function(d){ return d.cy; }
           })
@@ -204,7 +203,7 @@
   }
 
   var start_brushing = function(){
-    var defaultExtent = [[347, 813], [555, 900]],
+    var defaultExtent = [[7, 132], [216, 450]],
         x = d3.scale.identity().domain([0, width]),
         y = d3.scale.identity().domain([0, height]);
 
@@ -237,6 +236,8 @@
       .call(brush)
       .call(brush.event);
     
+    ptc3_network();
+    brushed();
     brushended();
   };
 
@@ -252,8 +253,7 @@
         plot: d.plot
       };
     });
-   
-    ptc3_network();
+    init_scales();
 
     // load the time data
     d3.csv("../../data/F_PTC3_words_LD_E.csv", function(data) {
