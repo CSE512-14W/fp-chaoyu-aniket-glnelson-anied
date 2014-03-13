@@ -1,0 +1,37 @@
+Area,Description,Function
+Medial,Medial,Brain Coordination
+STS,Banks superior temporal sulcus,Socializing
+caCing,Caudal anterior-cingulate cortex,"Behavior, Emotion"
+cMFG,Caudal middle frontal gyrus,Movement
+CC,Corpus Callosum,Brain Coordination
+Cun,Cuneus cortex,Vision
+Ent,Entorhinal cortex,Spatial Memory
+Fusi,Fusiform gyrus,Object Form Recognition
+AG,Inferior parietal cortex,Language/Context Synthesis
+ITG,Inferior temporal gyrus,Visual Object Recognition
+Isth,Isthmus-cingulate cortex,Brain Coordination
+LOC,Lateral occipital cortex,Vision
+LOrb,Lateral orbital frontal cortex,Emotion and Smelling
+Ling,Lingual gyrus,Vision
+MOrb,Medial orbital frontal cortex,Emotion and Smelling
+MTG,Middle temporal gyrus,Object Recognition
+ParaHip,Parahippocampal gyrus,Working Memory
+ParaC,Paracentral lobule,Movement
+ParsOper,Pars opercularis,Language and Judgment
+ParsOrb,Pars orbitalis,Language and Judgment
+ParsTri,Pars triangularis,Language and Judgment
+Calc,Pericalcarine cortex,Vision
+postCG,Postcentral gyrus,Feeling
+pCing,Posterior-cingulate cortex,"Behavior, Emotion"
+preCG,Precentral gyrus,Movement
+preCun,Precuneus cortex,"Personhood, Synthesis"
+raCing,Rostral anterior cingulate cortex,"Behavior, Emotion"
+rMFG,Rostral middle frontal gyrus,Memory
+SFG,Superior frontal gyrus,Memory
+SPC,Superior parietal cortex,Spatial Orientation
+STG,Superior temporal gyrus,Hearing and Socializing
+SMG,Supramarginal gyrus,Language/Context Synthesis
+FPol,Frontal pole,Executive Function
+TPol,Temporal pole,Object Recognition
+Aud,Transverse temporal cortex,Hearing
+Insula,Insula,Synthesis

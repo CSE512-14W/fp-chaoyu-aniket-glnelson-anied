@@ -1,0 +1,15 @@
+<CORSConfiguration>
+ <CORSRule>
+   <AllowedOrigin>http://www.example.com</AllowedOrigin>
+
+   <AllowedMethod>PUT</AllowedMethod>
+   <AllowedMethod>POST</AllowedMethod>
+   <AllowedMethod>DELETE</AllowedMethod>
+
+   <AllowedHeader>*</AllowedHeader>
+ </CORSRule>
+ <CORSRule>
+   <AllowedOrigin>*</AllowedOrigin>
+   <AllowedMethod>GET</AllowedMethod>
+ </CORSRule>
+</CORSConfiguration>

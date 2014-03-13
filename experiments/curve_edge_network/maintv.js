@@ -26,7 +26,7 @@
   // TODO: Holds id of node, id of node, time value, packet
   var node_node_time_packet = []
 
-  d3.csv("Datasets/PTC3_words_HD_E.csv")
+  d3.csv("../../data/PTC3_words_HD_E.csv")
     .row(function (d) {
       return {
         source: +d.src - 1,
