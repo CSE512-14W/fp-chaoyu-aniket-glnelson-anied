@@ -30,6 +30,7 @@ d3.csv("../../data/BrainImages/brain_areas.csv", function(data) {
 
 // 	}});
 
+// Could be faster if 1) it had a smarter key, 2) updated src/text fields as opposed to the whole html
 function tooltip_update(area) {
 	var contents = "<img class='tooltip_img' src='../../data/BrainImages/" + area + ".png'>"
 	portion = area.substring(2);
@@ -37,9 +38,14 @@ function tooltip_update(area) {
 	// Search for the info about this area (this could be done much faster with a key
 		// but I don't know how that is done.
 
+	if(area[0] == 'L')
+		hemi = 'Left';
+	else
+		hemi = 'Right';
+
 	for(i = 0; i < info.length; i++) {
 		if(portion == info[i].Area) {
-			title = "<span class='tooltip_title'>" + info[i].Description + "</span><br />";
+			title = "<span class='tooltip_title'>" + hemi + " " + info[i].Description + "</span><br />";
 			func  = "<span class='tooltip_function'>" + info[i].Function + "</span><br />";
 		}
 	}
