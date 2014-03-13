@@ -213,7 +213,7 @@
   }; // end ptc3_flow  
 
   var start_brushing = function(){
-    var defaultExtent = [[347, 813], [555, 900]],
+    var defaultExtent = [[7, 132], [216, 450]],
         x = d3.scale.identity().domain([0, width]),
         y = d3.scale.identity().domain([0, height]);
 
@@ -259,7 +259,7 @@
         z: +d.zcoord,
         area: d.area,
         plot: d.plot,
-	time_data: new Array() // index = t, [in_degree, out_degree]
+        time_data: new Array() // index = t, [in_degree, out_degree]
       };
     });
     
@@ -282,20 +282,20 @@
       _.each(data, function(d) {
         if(d.t == previous_timeslot) {
           flowdata[flowdata.length-1].push({"source": +d.src, "target": +d.snk});
-	  in_out_degree_at_timeslot[+d.src-1][1]+= 1;
-	  in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
+          in_out_degree_at_timeslot[+d.src-1][1]+= 1;
+          in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
         } else {
           if (in_out_degree_at_timeslot!= 1){
-	    // load the in_out_degree into nodedata
-	    for( var i = 0; i<nodedata.length; i++){
-	      nodedata[i]["time_data"].push(in_out_degree_at_timeslot[i]);
-	    };
-	  };
-	  in_out_degree_at_timeslot = array_in_out_size_of_nodes(nodedata);
+            // load the in_out_degree into nodedata
+            for( var i = 0; i<nodedata.length; i++){
+              nodedata[i]["time_data"].push(in_out_degree_at_timeslot[i]);
+            };
+          };
+          in_out_degree_at_timeslot = array_in_out_size_of_nodes(nodedata);
           previous_timeslot = d.t;
           flowdata.push([{"source": +d.src, "target": +d.snk}]);
-	  in_out_degree_at_timeslot[+d.src-1][1]+= 1;
-	  in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
+          in_out_degree_at_timeslot[+d.src-1][1]+= 1;
+          in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
 
         };
       });
