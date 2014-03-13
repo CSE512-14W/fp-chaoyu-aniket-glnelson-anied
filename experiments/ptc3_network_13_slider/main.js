@@ -124,7 +124,7 @@
   // Animation parameters
 
   var animation_duration = 3000;
-  var duration = 100;
+  var duration = 20;
   var time_interval = animation_duration / duration;
   var time_divisions = 5;
 
@@ -152,7 +152,9 @@
       .attr('id', 'textbox_timestart')
       .style("width","40px")
       .attr("value", "0");
-      // .on("click", time_update(0, 7));
+      // .on("click", function (d) {
+      //   current_time_step = parseInt(d3.select('#textbox_timestart').attr('value'));
+      //   });
     controller_area.append("span")
       .text(' to ');
     controller_area.append("input")
