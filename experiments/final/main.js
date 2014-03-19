@@ -558,8 +558,34 @@
 /*
  * TODO
  *
+Features that remain:
+
+1. Aggregate charts for selection (on right hand side)
+2. Matrix representation of graph
+3. Visual hypothesis testing (am thinking about the right way to do this) - found some algo's for permuting graphs, going to do some google searching on null models for neuroscience and null models at the sensor level
+4. Comparing two datasets ie data from nonsense vs real word
+
+Nice to have:
+1. Fix "density" issue for nodes closer together (route through center? adjust?)
+2. Show inverse of the graph
+3. More fully featured sensors and deriving sensors from simpler sensors (frequency filters, differences, et)
+4. Comparing >2 datasets
+
+Conrad's thoughts
+Features to do: (Preface: Don't worry about getting it all done! Future work is acceptable)
+1) Nice feature, but do this lastish
+2) Great! You guys have been working on this already
+3) I'll make some null models. There are a few ways to do it. I'll whiteboard it in the HCI lab tomorrow morning.
+4) Great! Again, there is no one way to compare this data so I'll whiteboard it to capture a sense.
+5) Persistent labels. This "shouldn't" be difficult.
+
+Nice to have:
+1) That would be cool, Jeff would appreciate it for sure, also if it is a toggle
+2) I don't think that would be useful for this data, even as a comparison point. Null models will be better.
+3) Cool, but sounds complicated :p Let's get to that if we have time
+4) Yes! Addressed before.
+5) Changing layout between circle & physical (both have drawbacks but I think it is good to have both representations).
  *
  * Maybe TODO
  * refactor time since we're juggling between index and actual time value
- * for 
  */
