@@ -99,14 +99,29 @@
             "cy": function(d){ return d.cy; }
           })
         .call(add_tooltip); 
+       /* .append('div') // gn todo uncomment and see if works
+          .attr({
+            "class": function(d){ return "nodename" + d.category; },
+            "cx": function(d){ return d.cx; },
+            "cy": function(d){ return d.cy; }
+          })
+          .text(function(d){ return "nodename" + d.category; });
+	*/
   };
 
   var update_textbox = function(start){
       d3.select("#textbox_timestart")
         .attr("value", start);
       d3.select("#textbox_timestop")
-        .attr("value", start + 6);
+        .attr("value", start + duration);
     };
+
+  // Animation parameters
+
+  var animation_duration = 3000;
+  var duration = 20;
+  var time_interval = animation_duration / duration;
+  var time_divisions = 5;
 
   var graph_contoller = function(){
     
@@ -130,21 +145,25 @@
       .on("click", stop);
     controller_area.append("input")
       .attr('id', 'textbox_timestart')
-      .style("width","50px")
+      .style("width","40px") // was 50
       .attr("value", "0");
-      // .on("click", time_update(0, 7));
+      // .on("click", function (d) {
+      //   current_time_step = parseInt(d3.select('#textbox_timestart').attr('value'));
+      //   });
     controller_area.append("span")
       .text(' to ');
     controller_area.append("input")
       .attr('id', 'textbox_timestop')
-      .style("width","50px")
+      .style("width","40px") // was 50
       .attr("value", "7");
       // .on("click", time_update(0, 7));
+    controller_area.append("span")
+      .text(' ms');
 
     var controller_height = 40;
     var controller_width = 600;
     var x = d3.scale.identity().domain([0, controller_width]);
-    var defaultExtent = [0,6];
+    var defaultExtent = [0,duration];
     
     var slidersvg = controller_area.append("svg")
         .attr("width", controller_width)
@@ -167,7 +186,7 @@
 
       var extent = brush.extent();
       var start = Math.floor(extent[0])
-      var target_extent = [start, start + 6];
+      var target_extent = [start, start + duration];
       current_time_step = start;
       d3.select(this).transition()
         .call(brush.extent(target_extent));
@@ -213,14 +232,13 @@
     return starting_point + (ratio * delta);
   }
 
-  var animation_duration = 3000;
-  var time_divisions = 5;
-
   var update_time_step = function(cur) {
     current_time_step = cur;
     d3.select("#controller g")
       .transition()
-      .call(controller_brusher.extent([cur, cur+6]));
+      .call(controller_brusher.extent([cur, cur+duration]));
+
+    update_textbox(cur);
   }
 
 
@@ -322,7 +340,7 @@
       cur++;
       update_time_step(cur);
     }
-    return setInterval(flow, 500);
+    return setInterval(flow, time_interval);
   }
 
   var start_brushing = function(){
