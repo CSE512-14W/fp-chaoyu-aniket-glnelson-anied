@@ -176,7 +176,11 @@
                             .domain([0, 600])
                             .range([0, controller_width])
                             .nice();
-
+    /*
+     * TODO user clicks on timeline while animation running
+     * timeline goes to that point in time immediately
+     * without having to press start again
+     */
     var brushed = function() {
       var extent = brush.extent();
       var start = Math.floor(extent[0])
@@ -358,6 +362,7 @@
     return setInterval(flow, time_interval);
   }
 
+  // TODO switch to nodes being clicked or not
   var start_brushing = function(){
     var defaultExtent = [[7, 132], [216, 450]],
         x = d3.scale.identity().domain([0, width]),
