@@ -349,7 +349,6 @@
         y = d3.scale.identity().domain([0, height]);
 
     var brushed = function() {
-      if (flow_id !== undefined) clearInterval(flow_id);
       var extent = brush.extent();
       console.log(extent);
       node.each(function(d) {
