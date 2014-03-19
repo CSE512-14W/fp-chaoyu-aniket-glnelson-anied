@@ -558,11 +558,17 @@
 /*
  * TODO
  *
+(NAME) to say I will do this
+(NAME+) I will help with this
+
+(GREG+) Writeup - Greg has refs and structure in head / from poster
+
 Features that remain:
 
 1. Aggregate charts for selection (on right hand side)
 2. Matrix representation of graph
-3. Visual hypothesis testing (am thinking about the right way to do this) - found some algo's for permuting graphs, going to do some google searching on null models for neuroscience and null models at the sensor level
+(GREG)  Refactor to show with time
+3. Visual hypothesis testing 
 4. Comparing two datasets ie data from nonsense vs real word
 
 Nice to have:
@@ -570,6 +576,7 @@ Nice to have:
 2. Show inverse of the graph
 3. More fully featured sensors and deriving sensors from simpler sensors (frequency filters, differences, et)
 4. Comparing >2 datasets
+5. Changing layout between physical and circle
 
 Conrad's thoughts
 Features to do: (Preface: Don't worry about getting it all done! Future work is acceptable)
