@@ -1,4 +1,6 @@
-(function(){
+//(function(){ // make everything same namespace for now so easier
+// console inspect; refactor into private / local namespaces as needed
+// I checked nodeinfo for no namespace collisions
   var margin = {top: 40, right: 40, bottom: 40, left: 40},
       width = 600,
       height = 600;
@@ -12,6 +14,7 @@
   var node = svg.selectAll(".node");
   var packet = svg.selectAll(".packet");
 
+  // flowdata is [[src, target], ...], next timestep, ...]
   var nodedata, groupnode, flowdata = [];
   var x_range, y_range, x_scale, y_scale, c_scale;
 
@@ -177,8 +180,14 @@
     var brushed = function() {
       var extent = brush.extent();
       var start = Math.floor(extent[0])
+
       update_textbox(start);
-      stop();
+
+      // was trying to get this to be instantly brushable
+      // wasn't working out well
+      //current_time_step = start;
+      //d3.select(this).transition() // i think not working bc of how initialized
+       // .call(brush.extent(target_extent));
     };
 
     var brushended = function() {
@@ -190,6 +199,12 @@
       current_time_step = start;
       d3.select(this).transition()
         .call(brush.extent(target_extent));
+      // was trying to get this to be instantly brushable
+      // wasn't working out well, need refactor drawing
+	// to make it work well I think
+	// so draw has interface draw(start,stop,loop_start,loop_end)
+	// that sets up interval etc
+      // update_time_step(current_time_step);
     };
 
     var brush = d3.svg.brush()
@@ -380,9 +395,10 @@
     brushended();
   };
 
-  var plotMatrix = function(in_out_degree_at_timeslot, flowdata)  {
+  var plotMatrix = function(in_out_degree_at_timeslot, flowdata, time)  {
     var intensity = [];
     var aggreInOut = [];
+    // refactoring to draw from the nodes dataset
 
     for(var i = 0; i < 40; i++)
       aggreInOut[i] = [];
@@ -526,11 +542,19 @@
           in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
         }
       });
-      plotMatrix(in_out_degree_at_timeslot, flowdata);
+      plotMatrix(in_out_degree_at_timeslot, flowdata, 0);
       start_brushing();
       controller_brusher = graph_contoller();
     });
 
   });
-})();
+//})();
 
+/*
+ * TODO
+ *
+ *
+ * Maybe TODO
+ * refactor time since we're juggling between index and actual time value
+ * for 
+ */
