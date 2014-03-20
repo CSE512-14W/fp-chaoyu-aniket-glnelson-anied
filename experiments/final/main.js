@@ -280,8 +280,12 @@
       var flow_duration = animation_duration - draw_tail_duration; // 2000
 
       // TODO refactor to include and offset on xsrc, xdest, ysrc, ydest
-      // to draw reference or other lines
-      // TODO see what looks like without growing dots, put spaces in there instead 
+      //      and intensity / color / style of the line
+      // to draw reference or other lines for comparison
+      // 	do this by finding orthogonal direction to line
+      // 	then offset by small amount in pos or neg direction
+      //
+      // TODO see what looks like without growing dots, and/or put spaces in there instead 
       // TODO BUG line trails don't change length with duration change
       packet.data(selected)
             .enter()
