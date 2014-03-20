@@ -211,12 +211,17 @@
       // update_time_step(current_time_step);
     };
 
+    // TODO look at doc and see if different events
+		  // for center (ie drag click)
+		  // vs extent / duration drag clicks
     var brush = d3.svg.brush()
                   .x(controller_scale)
                   .extent(defaultExtent)
                   .on("brush", brushed)
                   .on("brushend", brushended);
 
+    // TODO replace with avg in and out degree
+		  // summary plot
     slidersvg.append("rect")
         .attr({
           width: controller_width,
@@ -260,7 +265,6 @@
     update_textbox(cur);
   }
 
-
   var ptc3_flow = function(){
     console.log("redraw");
     var cur = current_time_step;
@@ -275,6 +279,10 @@
       var draw_tail_duration = animation_duration / time_divisions; // 500
       var flow_duration = animation_duration - draw_tail_duration; // 2000
 
+      // TODO refactor to include and offset on xsrc, xdest, ysrc, ydest
+      // to draw reference or other lines
+      // TODO see what looks like without growing dots, put spaces in there instead 
+      // TODO BUG line trails don't change length with duration change
       packet.data(selected)
             .enter()
             .append("line")
