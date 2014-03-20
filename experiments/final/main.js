@@ -512,7 +512,7 @@
   }
 
   
-  d3.csv("../../data/PTC3_V.csv", function(data) {
+  d3.csv("../../data/PTC3-V.csv", function(data) {
     nodedata = data.map(function(d) {
       return {
         label: d.label,
@@ -535,7 +535,7 @@
     };
 
     // load the time data
-    d3.csv("../../data/F_PTC3_words_LD_E.csv", function(data) {
+    d3.csv("../../data/F-PTC3-words95-LD-E.csv", function(data) {
       var previous_timeslot;
       var in_out_degree_at_timeslot = 1;
 
