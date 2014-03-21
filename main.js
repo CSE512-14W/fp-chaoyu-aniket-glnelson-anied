@@ -1,7 +1,6 @@
 //(function(){ // make everything same namespace for now so easier
 // console inspect; refactor into private / local namespaces as needed
 // I checked nodeinfo for no namespace collisions
-
   var nodedata, groupnode, flowdata = [];
 
   var current_time_step = 0;
@@ -16,8 +15,6 @@
   }
   window.start = start;
 
- 
-  
   d3.csv("data/PTC3-V.csv", function(data) {
     nodedata = data.map(function(d) {
       return {
@@ -66,7 +63,7 @@
         }
       });
       plotMatrix(in_out_degree_at_timeslot, flowdata, 0);
-      flow.start_brushing();
+      flow.init();
       controller_brusher = graph_contoller();
     });
 

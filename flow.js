@@ -74,7 +74,7 @@ var flow = function(){
   };
 
   // draw the initial nodes
-  var ptc3_network = function() {
+  var draw_ptc3_nodes = function() {
     node = node.data(nodedata)
         .enter()
         .append("circle")
@@ -85,8 +85,16 @@ var flow = function(){
             "cx": function(d){ return d.cx; },
             "cy": function(d){ return d.cy; }
           })
-        .call(add_tooltip); 
+        //.call(add_tooltip)
+        .call(toggle_select);
   };
+
+  function toggle_select(selection){
+    selection.on('click', function (d) {
+      d.selected = d.selected ? false : true;
+      selection.classed("selected", function(d){ return d.selected;})
+    });
+  }
 
   // Animation parameters
   var animation_duration = 1800;
@@ -221,49 +229,51 @@ var flow = function(){
   }
 
   // TODO switch to nodes being clicked or not
-  var start_brushing = function(){
-    var defaultExtent = [[7, 132], [216, 450]],
-        x = d3.scale.identity().domain([0, width]),
-        y = d3.scale.identity().domain([0, height]);
+  //var start_brushing = function(){
+  //  var defaultExtent = [[7, 132], [216, 450]],
+  //      x = d3.scale.identity().domain([0, width]),
+  //      y = d3.scale.identity().domain([0, height]);
 
-    var brushed = function() {
-      var extent = brush.extent();
-      console.log(extent);
-      node.each(function(d) {
-        d.selected = (extent[0][0] <= d.cx) && (d.cx < extent[1][0])
-                    && (extent[0][1] <= d.cy) && (d.cy < extent[1][1]);
-      });
-      node.classed("selected", function(d){ return d.selected;})
-    };
+  //  var brushed = function() {
+  //    var extent = brush.extent();
+  //    console.log(extent);
+  //    node.each(function(d) {
+  //      d.selected = (extent[0][0] <= d.cx) && (d.cx < extent[1][0])
+  //                  && (extent[0][1] <= d.cy) && (d.cy < extent[1][1]);
+  //    });
+  //    node.classed("selected", function(d){ return d.selected;})
+  //  };
 
 
-    var brushended = function() {
-      console.log("brushended");
-    };
+  //  var brushended = function() {
+  //    console.log("brushended");
+  //  };
 
-    var brush = d3.svg.brush()
-                  .x(x)
-                  .y(y)
-                  .extent(defaultExtent)
-                  .on("brush", brushed)
-                  .on("brushend", brushended);
+  //  var brush = d3.svg.brush()
+  //                .x(x)
+  //                .y(y)
+  //                .extent(defaultExtent)
+  //                .on("brush", brushed)
+  //                .on("brushend", brushended);
    
-    svg.append("g")
-      .attr("class", "brush")
-      .call(brush)
-      .call(brush.event);
+  //  svg.append("g")
+  //    .attr("class", "brush")
+  //    .call(brush)
+  //    .call(brush.event);
     
-    ptc3_network();
-    brushed();
-    brushended();
+  //  ptc3_network();
+  //  brushed();
+  //  brushended();
+  //};
+  var init = function(){
+    draw_ptc3_nodes();
   };
 
   return {
+    init: init,
     init_scales: init_scales,
-    start_brushing: start_brushing,
     ptc3_flow: ptc3_flow,
     duration: duration,
     animation_duration: animation_duration
   };
 }();
-
