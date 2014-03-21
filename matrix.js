@@ -29,8 +29,10 @@ var plotMatrix = function()  {
           var tar = parseInt(flowdata[i][j].target);
           if(isNaN(aggreInOut[src][tar])){
             aggreInOut[src][tar] = 1;
+            nodedata[tar].temp_in_count = 1;
           }else{
             aggreInOut[src][tar]++;
+            nodedata[tar].temp_in_count++;
           }
         }
       }
@@ -39,15 +41,17 @@ var plotMatrix = function()  {
 
   var intensity_matrix = function (agg_matrix) {
       var intens = [ ];
-      for(var src = 0; src < nodedata.length; src++){
-        intens[src] = [];
-        for(var tgt = 0; tgt < nodedata.length; tgt++){
-          intens [src][tgt] = 0;
-	  if (nodedata[tgt].total_in_degree != 0){
-              intens [src][tgt] = parseInt(agg_matrix[src][tgt]) / nodedata[tgt].total_in_degree;
-	  }
+        baseline = nodedata;
+        for(var src = 0; src < nodedata.length; src++){
+          intens[src] = [];
+          for(var tgt = 0; tgt < nodedata.length; tgt++){
+            intens [src][tgt] = 0;
+            if (nodedata[tgt].total_in_degree != 0 && !(isNaN(agg_matrix[src][tgt]))){
+                intens [src][tgt] = parseInt(agg_matrix[src][tgt]) / nodedata[tgt].temp_in_count;
+            }
+          }
         }
-      }
+      
       return intens;
   };
 
@@ -140,7 +144,7 @@ var plotMatrix = function()  {
       //generating intensity using in and out degrees
       intensity = intensity_matrix(aggreInOut);
 
-      if (cur == 1){
+      if (cur == 0){
       var breakhere=1;
       }
       var h = 0.8,
