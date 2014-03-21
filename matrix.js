@@ -8,7 +8,8 @@ var plotMatrix = function()  {
   // refactoring to draw from the nodes dataset
 
   var init = function(){
-;
+      $("#matrix").html("");
+
       for(var i = 0; i < 40; i++)
       aggreInOut[i] = [];
 
@@ -217,6 +218,6 @@ var plotMatrix = function()  {
   return {
     init: init,
     draw: draw
-  }
+  };
 
 }();

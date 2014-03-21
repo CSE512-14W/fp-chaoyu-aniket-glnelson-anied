@@ -18,7 +18,7 @@ perc = hash.substring(1, 3);
 cond = hash.substring(4, 6);
 
 // Load the page's data
-loaddata();
+//loaddata();
 
 // Options
 conditions = ["HD", "LD", "HF", "LF"];

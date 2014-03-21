@@ -339,7 +339,6 @@ var flow = function(){
   var init = function(){
     start_brushing();
     draw_ptc3_nodes();
-    plotMatrix.init();
   };
 
   return {

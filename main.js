@@ -88,6 +88,7 @@
         first_run = false;
       }
 
+      plotMatrix.init();
     });
   }
 //})();
