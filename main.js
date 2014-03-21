@@ -88,7 +88,7 @@
         first_run = false;
       }
 
-      plotMatrix.init();
+      plotMatrix.init(7);
     });
   }
 //})();

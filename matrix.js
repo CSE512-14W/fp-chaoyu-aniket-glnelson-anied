@@ -7,7 +7,7 @@ var plotMatrix = function()  {
   var aggreInOut = [];
   // refactoring to draw from the nodes dataset
 
-  var init = function(){
+  var init = function(duration){
       $("#matrix").html("");
 
       for(var i = 0; i < 40; i++)
@@ -102,14 +102,7 @@ var plotMatrix = function()  {
           .duration(300)
           .style("opacity", 1e-6);
         }
-  }
-
-  var draw = function(cur, duration){
-
-      //remove svg
-      $("#matrix").html("");
-      
-      //console.log(cur + '-'+duration);
+      cur = 0;
 
       for(var i = 0; i < 40; i++)
       aggreInOut[i] = [];
@@ -141,6 +134,15 @@ var plotMatrix = function()  {
           }
         }
       }
+  }
+
+  var draw = function(cur, duration){
+
+      //remove svg
+      $("#matrix").html("");
+      
+      //console.log(cur + '-'+duration);
+
 
       //console.log(intensity);
 
@@ -212,6 +214,37 @@ var plotMatrix = function()  {
           .duration(300)
           .style("opacity", 1e-6);
         }
+      cur = cur +1;
+      for(var i = 0; i < 40; i++)
+      aggreInOut[i] = [];
+
+      for(var i = cur; i < cur + duration; i++){         //go thru all time slots
+        if(i < flowdata.length){
+        for(var j=0; j < flowdata[i].length;  j++){   //go thru all edges in that time slot
+
+          var src = parseInt(flowdata[i][j].source);
+          var tar = parseInt(flowdata[i][j].target);
+          if(isNaN(aggreInOut[src][tar])){
+            aggreInOut[src][tar] = 1;
+          }else{
+            aggreInOut[src][tar]++;
+          }
+        }
+        }
+      }
+      //console.log(aggreInOut);
+      //console.log(in_out_degree_at_timeslot[1]);
+      //generating intensity using in and out degrees
+      for(var i = 0; i < in_out_degree_at_timeslot.length; i++){
+        intensity[i] = [];
+        for(var j = 0; j < in_out_degree_at_timeslot.length; j++){
+          intensity [i][j] = 0;
+          if(isNaN(aggreInOut[i][j]) == false && (nodedata[i].selected == 1 || nodedata[j].selected == 1 )) {
+          //console.log( parseInt(in_out_degree_at_timeslot[1]) / aggreIn[j]);
+          intensity [i][j] = parseInt(in_out_degree_at_timeslot[i][1]) / aggreInOut[i][j]; //0 or 1?
+          }
+        }
+      }
   }
 
 
