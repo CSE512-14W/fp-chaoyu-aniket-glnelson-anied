@@ -11,4 +11,4 @@ Yang Chaoyu, Aniket Handa, Gregory Nelson, A Conrad Nied {chaoyu, aniket, glnels
 
 ## Running Instructions
 
-Access our visualization at http://cse512-14w.github.io/fp-chaoyu-aniket-glnelson-anied/ or download this repository and run `python -m SimpleHTTPServer 9000` and access this from http://localhost:9000/.
+Access our visualization at http://cse512-14w.github.io/fp-chaoyu-aniket-glnelson-anied/index.html or download this repository and run `python -m SimpleHTTPServer 9000` and access this from http://localhost:9000/.
