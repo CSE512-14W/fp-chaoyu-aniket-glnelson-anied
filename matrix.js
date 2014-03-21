@@ -1,4 +1,8 @@
 var plotMatrix = function(in_out_degree_at_timeslot, flowdata, time)  {
+  var margin = {top: 40, right: 40, bottom: 40, left: 40},
+      width = 600,
+      height = 600;
+
   var intensity = [];
   var aggreInOut = [];
   // refactoring to draw from the nodes dataset
