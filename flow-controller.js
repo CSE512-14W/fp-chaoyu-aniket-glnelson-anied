@@ -58,11 +58,45 @@ var graph_contoller = function(){
   var slidersvg = controller_area.append("svg")
                                   .attr("width", controller_width)
                                   .attr("height", controller_height);
+  //slidersvg.append("rect")
+  //  .attr({
+  //        width: controller_width,
+  //        height: controller_height,
+  //        class: 'controller-background'
+  //        });
 
   var controller_scale = d3.scale.linear()
                             .domain([0, 600])
                             .range([0, controller_width])
                             .nice();
+
+  var in_out_degree_range = [d3.min(total_degree, function(d) { return d; }),
+                              d3.max(total_degree, function(d) { return d; })];
+  // y-axis scale
+  var yScale = d3.scale.linear()
+                       .domain(in_out_degree_range)
+                       .range([0, controller_height])
+                       .nice();
+                        
+  // color scale
+  var cScale = d3.scale.log()
+                       .domain(in_out_degree_range)
+                       .range([30, 0]);    
+  var barPadding = 1;
+
+  slidersvg.selectAll(".r")
+    .data(total_degree)
+    .enter()
+    .append("rect")
+        .attr({
+          x: function(d, i) { return i* (controller_width/total_degree.length);},
+          y: function(d) { return controller_height - yScale(d);},
+          width: controller_width / total_degree.length - barPadding,
+          height: function(d) { return yScale(d);},
+          fill: "#a8a8a8",
+          stroke: "#a8a8a8"
+        });
+
   /*
    * TODO user clicks on timeline while animation running
    * timeline goes to that point in time immediately
@@ -86,6 +120,13 @@ var graph_contoller = function(){
 
     var extent = brush.extent();
     var start = Math.floor(extent[0])
+    var end = Math.floor(extent[1])
+
+    flow.duration = Math.min(end - start, 50);
+    flow.duration = Math.max(flow.duration, 7);
+    console.log(flow.duration);
+    // flow.time_interval = flow.animation_duration / flow.duration;
+
       var target_extent = [start, start + flow.duration];
       current_time_step = start;
       d3.select(this).transition()
@@ -109,19 +150,13 @@ var graph_contoller = function(){
 
   // TODO replace with avg in and out degree
   // summary plot
-  slidersvg.append("rect")
-    .attr({
-          width: controller_width,
-          height: controller_height,
-          class: 'controller-background'
-          });
+
 
   var gBrush = slidersvg.append("g")
       .attr("class", "brush")
       .call(brush)
       .call(brush.event);
       
-  gBrush
 
   gBrush.selectAll("rect")
   .attr("height", controller_height)

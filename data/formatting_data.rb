@@ -20,7 +20,12 @@ HFnulldata = "PTC3-wordsnull-HF-E"
 LDnulldata = "PTC3-wordsnull-LD-E"
 LFnulldata = "PTC3-wordsnull-LF-E"
 
-FILE_NAME = LFnulldata
+NUdata = "PTC3-words-NU-E"
+NU95data = "PTC3-words95-NU-E"
+NU99data = "PTC3-words99-NU-E"
+
+
+FILE_NAME = NU99data
 
 def formatting_data
   flow_data = File.open(FILE_NAME + ".csv", "r")

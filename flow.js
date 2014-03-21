@@ -10,6 +10,7 @@ var flow = function(){
                 //.attr("class", 'graph-svg')
 
   var node = svg.selectAll(".node");
+  var labels = svg.selectAll(".label");
   var packet = svg.selectAll(".packet");
 
   // flowdata is [[src, target], ...], next timestep, ...]
@@ -79,19 +80,68 @@ var flow = function(){
 
   // draw the initial nodes
   var draw_ptc3_nodes = function() {
-    node = node.data(nodedata)
+    var drag = d3.behavior.drag()
+                  .origin(function(d) { return d; })
+                  .on("dragstart", dragstarted)
+                  .on("drag", dragged)
+                  .on("dragend", dragended);
+
+    var ox, oy;
+    function dragstarted(d) {
+      d3.event.sourceEvent.stopPropagation();
+      //d3.select(this).classed("dragging", true);
+      ox = d.cx;
+      oy = d.cy;
+    }
+
+    function dragged(d) {
+      var category = d.category;
+      var cx = ox + d3.event.x;
+      var cy = oy + d3.event.y;
+      console.log(category);
+
+      _.each(node[0], function(dd){
+        if (dd.__data__.category == category) {
+          d3.select(dd).attr("cx", dd.__data__.cx = cx ).attr("cy", dd.__data__.cy = cy);
+        }
+      });
+
+      _.each(labels[0], function(dd){
+        if (dd.__data__.category == category) {
+          d3.select(dd).attr("x",  cx - dd.__data__.category.length * 2.8)
+                        .attr("y",  cy + 4);
+        }
+      });
+    }
+
+    function dragended(d) {
+      //d3.select(this).classed("dragging", false);
+    }
+
+    gnodes = node.data(nodedata)
         .enter()
-        .append("circle")
+        .append("g")
+
+    node = gnodes.append("circle")
           .attr({
             "class": function(d){ return "node " + d.category; },
             "fill": function(d){ return c_scale(d.category); },
-            "r": function(d){ return (d.r * 3) + 4; },
+            "r": 20,
             "cx": function(d){ return d.cx; },
             "cy": function(d){ return d.cy; }
           })
-        //.call(add_tooltip)
+        .call(add_tooltip)
+        .call(drag);
         //.call(toggle_select);
-         
+
+    labels = gnodes.append("text")
+          .text(function(d){ return d.category;})
+          .attr({
+            "x": function(d){ return d.cx - d.category.length*2.8; },
+            "y": function(d){ return d.cy + 4; },
+            "font-size": '10px',
+            "font-family": 'sans-serif'
+          })
   };
 
   //function toggle_select(selection){
@@ -111,7 +161,7 @@ var flow = function(){
   //}
 
   // Animation parameters
-  var animation_duration = 1800;
+  var animation_duration = 8000;
   var duration = 7;
   var time_interval = animation_duration / duration;
 
@@ -289,7 +339,6 @@ var flow = function(){
   var init = function(){
     start_brushing();
     draw_ptc3_nodes();
-    plotMatrix.init();
   };
 
   return {
@@ -297,6 +346,7 @@ var flow = function(){
     init_scales: init_scales,
     ptc3_flow: ptc3_flow,
     duration: duration,
+    time_interval: time_interval,
     animation_duration: animation_duration
   };
 }();
