@@ -14,7 +14,15 @@ Yang Chaoyu, Aniket Handa, Gregory Nelson, A Conrad Nied {chaoyu, aniket, glnels
 
 Access our visualization at http://cse512-14w.github.io/fp-chaoyu-aniket-glnelson-anied/index.html or download this repository and run `python -m SimpleHTTPServer 9000` and access this from http://localhost:9000/.
 
-# Division of Labor
+### Operation
+
+* Click on nodes to move them
+* Brush over nodes to highlight them (show activity coming from specific nodes)
+* Press start to play data
+* While stopped, brush on the timeline to change start time and duration
+* Changes the datasets
+
+## Division of Labor
 
 Each member took part in writing code and designing the system and we believe the division of labor was fair. To break it down by focused contribution:
 
