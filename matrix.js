@@ -39,16 +39,23 @@ var plotMatrix = function()  {
       return aggreInOut;
   };
 
+          // if(isNaN(aggreInOut[i][j]) == false && (nodedata[i].selected == 1 || nodedata[j].selected == 1 )) {
   var intensity_matrix = function (agg_matrix) {
       var intens = [ ];
         baseline = nodedata;
         for(var src = 0; src < nodedata.length; src++){
           intens[src] = [];
-          for(var tgt = 0; tgt < nodedata.length; tgt++){
-            intens [src][tgt] = 0;
-            if (nodedata[tgt].total_in_degree != 0 && !(isNaN(agg_matrix[src][tgt]))){
-                intens [src][tgt] = parseInt(agg_matrix[src][tgt]) / nodedata[tgt].temp_in_count;
+          if (nodedata[src].selected == 1 ) {
+            for(var tgt = 0; tgt < nodedata.length; tgt++){
+              if (nodedata[tgt].selected == 1 ){
+                intens [src][tgt] = 0;
+                if (nodedata[tgt].total_in_degree != 0 && !(isNaN(agg_matrix[src][tgt])) ){
+                    intens [src][tgt] = parseInt(agg_matrix[src][tgt]) / nodedata[tgt].temp_in_count;
+                }
+              }
             }
+          
+          
           }
         }
       
@@ -221,6 +228,6 @@ var plotMatrix = function()  {
   return {
     init: init,
     draw: draw
-  }
+  };
 
 }();

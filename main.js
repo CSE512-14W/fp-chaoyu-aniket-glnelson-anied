@@ -7,6 +7,8 @@
   var controller_brusher;
   var flow_id;
 
+  var array_in_out_size_of_nodes;
+
   function start(){
     flow_id = flow.ptc3_flow();
   }
@@ -24,15 +26,15 @@
         z: +d.zcoord,
         area: d.area,
         plot: d.plot,
-	total_in_degree: 1,
-	total_out_degree: 1,
-	selected: 0,
+	      total_in_degree: 1,
+      	total_out_degree: 1,
+      	selected: 0,
         time_data: new Array() // index = t, [in_degree, out_degree]
       };
     });
     flow.init_scales();
  
-    var array_in_out_size_of_nodes = function(nodes){
+    array_in_out_size_of_nodes = function(nodes){
       var x = [];
       _.each(nodes, function(d){
         x.push([0,0]);
@@ -40,26 +42,28 @@
       return x;
     };
 
-    var set_total_in_out = function(nodes){
-      for (var i = 0; i<nodes.length; i++){
-	var total_in = 0;
-	var total_out = 0;
+    loaddata()
+  });
 
-	_.each(nodes[i].time_data, function(t){
-	  total_in += t[0];
-	  total_out += t[1];
-	});
-
-	nodes[i].total_in_degree = total_in;
-	nodes[i].total_out_degree = total_out;
-      };
-    };
-
-    // load the time data
-    d3.csv("data/F-PTC3-words95-LD-E.csv", function(data) {
+  // load the time data
+  first_run = true;
+  function loaddata() {
+    hash = location.hash;
+    if(hash == null || hash == "") {
+      hash = '95-LD';
+    }
+    perc = hash.substring(1, 3);
+    cond = hash.substring(4, 6);
+    if(perc == '50') {
+      filename = "data/F-PTC3-words-" + cond + "-E.csv";
+    } else {
+      filename = "data/F-PTC3-words" + perc + "-" + cond + "-E.csv";
+    }
+    d3.csv(filename, function(data) {
       var previous_timeslot;
-
       var this_timeslot = 1;
+      flowdata = [];
+      
       _.each(data, function(d) {
         if(d.t == previous_timeslot) {
           flowdata[flowdata.length-1].push({"source": +d.src -1, "target": +d.snk - 1})
@@ -81,17 +85,17 @@
         }
       });
 
-      set_total_in_out(nodedata);
-
       time_max = flowdata.length
       //plotMatrix(in_out_degree_at_timeslot, flowdata, 0);
-      flow.init();
-      //plotMatrix(in_out_degree_at_timeslot, flowdata, 0);
-      controller_brusher = graph_contoller();
+      if(first_run) {
+        flow.init()
+        controller_brusher = graph_contoller();
+        first_run = false;
+      }
+
+      plotMatrix.init();
     });
-
-
-  });
+  }
 //})();
 
 /*

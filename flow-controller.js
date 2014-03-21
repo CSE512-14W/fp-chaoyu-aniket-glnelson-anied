@@ -86,6 +86,13 @@ var graph_contoller = function(){
 
     var extent = brush.extent();
     var start = Math.floor(extent[0])
+    var end = Math.floor(extent[1])
+
+    flow.duration = Math.min(end - start, 50);
+    flow.duration = Math.max(flow.duration, 7);
+    console.log(flow.duration);
+    // flow.time_interval = flow.animation_duration / flow.duration;
+
       var target_extent = [start, start + flow.duration];
       current_time_step = start;
       d3.select(this).transition()
