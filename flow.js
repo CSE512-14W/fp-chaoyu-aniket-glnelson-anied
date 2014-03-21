@@ -161,7 +161,7 @@ var flow = function(){
   //}
 
   // Animation parameters
-  var animation_duration = 1800;
+  var animation_duration = 8000;
   var duration = 7;
   var time_interval = animation_duration / duration;
 

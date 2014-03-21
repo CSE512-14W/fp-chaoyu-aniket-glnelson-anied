@@ -52,7 +52,7 @@
     }
     perc = hash.substring(1, 3);
     cond = hash.substring(4, 6);
-    if(perc == '50' && cond != 'NU') {
+    if(perc == '50' ) {
       filename = "data/F-PTC3-words-" + cond + "-E.csv";
     } else {
       filename = "data/F-PTC3-words" + perc + "-" + cond + "-E.csv";
