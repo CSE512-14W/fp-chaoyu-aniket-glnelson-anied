@@ -114,7 +114,9 @@ var plotMatrix = function()  {
       aggreInOut[i] = [];
 
       for(var i = cur; i < cur + duration; i++){         //go thru all time slots
+        if(i < flowdata.length){
         for(var j=0; j < flowdata[i].length;  j++){   //go thru all edges in that time slot
+
           var src = parseInt(flowdata[i][j].source);
           var tar = parseInt(flowdata[i][j].target);
           if(isNaN(aggreInOut[src][tar])){
@@ -122,6 +124,7 @@ var plotMatrix = function()  {
           }else{
             aggreInOut[src][tar]++;
           }
+        }
         }
       }
       //console.log(aggreInOut);
