@@ -4,6 +4,7 @@
   var nodedata, groupnode, flowdata = [];
   var in_out_degree_at_timeslot = 1;
   
+  var total_degree = [];
   var current_time_step = 0;
   var controller_brusher;
   var flow_id;
@@ -17,6 +18,7 @@
     if (flow_id !== undefined) clearInterval(flow_id);
   }
   window.start = start;
+
 
   d3.csv("data/PTC3-V.csv", function(data) {
     nodedata = data.map(function(d) {
@@ -59,6 +61,7 @@
     }
     d3.csv(filename, function(data) {
       var previous_timeslot;
+      var degree_at_time = 0;
       flowdata = [];
       
       _.each(data, function(d) {
@@ -66,6 +69,7 @@
           flowdata[flowdata.length-1].push({"source": +d.src -1, "target": +d.snk - 1})
           in_out_degree_at_timeslot[+d.src-1][1]+= 1;
           in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
+          degree_at_time ++;
 
         } else {
           if (in_out_degree_at_timeslot!= 1){
@@ -73,14 +77,23 @@
             for( var i = 0; i<nodedata.length; i++){
               nodedata[i]["time_data"].push(in_out_degree_at_timeslot[i]);
             };
+            total_degree.push(degree_at_time);
+            degree_at_time = 0;
           };
           in_out_degree_at_timeslot = array_in_out_size_of_nodes(nodedata);
           previous_timeslot = d.t;
           flowdata.push([{"source": +d.src - 1, "target": +d.snk -1}]);
           in_out_degree_at_timeslot[+d.src-1][1]+= 1;
           in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
+          degree_at_time ++;
         }
       });
+      total_degree.push(degree_at_time);
+
+      // Hi Chaoyu
+      // total_degree[t] is the total degree at that time
+      // it is a global variable
+
 
       if(first_run) {
         flow.init()

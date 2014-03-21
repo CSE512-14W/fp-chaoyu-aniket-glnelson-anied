@@ -220,7 +220,9 @@ var plotMatrix = function()  {
 
   return {
     init: init,
-    draw: draw
+    draw: draw,
+    intensity: intensity,
+    aggreInOut: aggreInOut
   };
 
 }();
