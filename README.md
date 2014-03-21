@@ -8,7 +8,6 @@ Yang Chaoyu, Aniket Handa, Gregory Nelson, A Conrad Nied {chaoyu, aniket, glnels
 
 [Poster](https://github.com/CSE512-14W/fp-chaoyu-aniket-glnelson-anied/raw/master/final/poster-chaoyu-aniket-glnelson-anied.pdf)
 
-Please note that this is a draft:
 [Final Paper](https://github.com/CSE512-14W/fp-chaoyu-aniket-glnelson-anied/raw/master/final/paper-chaoyu-aniket-glnelson-anied.pdf) 
 
 ## Running Instructions
