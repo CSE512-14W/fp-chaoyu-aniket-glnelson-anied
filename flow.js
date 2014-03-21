@@ -108,8 +108,8 @@ var flow = function(){
 
       _.each(labels[0], function(dd){
         if (dd.__data__.category == category) {
-          d3.select(dd).attr("x", dd.__data__.cx = cx - dd.__data__.category.length * 2.8)
-                        .attr("y", dd.__data__.cy = cy + 4);
+          d3.select(dd).attr("x",  cx - dd.__data__.category.length * 2.8)
+                        .attr("y",  cy + 4);
         }
       });
     }
