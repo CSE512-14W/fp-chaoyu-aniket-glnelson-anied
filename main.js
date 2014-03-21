@@ -67,7 +67,6 @@
       d.cx = x_scale(d.x);
       d.cy = y_scale(d.y);
     });
-
   };
 
   var circle_layout = function() {
