@@ -14,16 +14,6 @@ body {
   font-size: 22pt;
 }
 
-.nav-tabs > .active > a, .nav-tabs > .active > a:hover { 
-  outline: 0;
-  color: #555555;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-bottom-color: transparent;
-  cursor: default;
-}
-
-
 #graph svg {
   display: block;
   margin: auto;

@@ -90,16 +90,25 @@ var flow = function(){
             "cy": function(d){ return d.cy; }
           })
         //.call(add_tooltip)
-        .call(toggle_select);
+        //.call(toggle_select);
          
   };
 
-  function toggle_select(selection){
-    selection.on('click', function (d) {
-      d.selected = d.selected ? false : true;
-      selection.classed("selected", function(d){ return d.selected;})
-    });
-  }
+  //function toggle_select(selection){
+  //  selection.on('click', function (d) {
+  //    category = d.category;
+  //    d.selected = d.selected ? false : true;
+      
+  //    var selected = d.selected;
+  //    _.each(node, function(dd){
+  //      if (dd.category == category) {
+  //        dd.selected = selected
+  //      }
+  //    });
+
+  //    selection.classed("selected", function(d){ return d.selected;})
+  //  });
+  //}
 
   // Animation parameters
   var animation_duration = 1800;
@@ -266,7 +275,7 @@ var flow = function(){
                   .on("brushend", brushended);
    
     svg.append("g")
-      .datum(function() { return {selected: false, previouslySelected: false}; })
+      //.datum(function() { return {selected: false, previouslySelected: false}; })
       .attr("class", "brush")
       .call(brush);
   };
