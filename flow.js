@@ -3,18 +3,8 @@ var flow = function(){
       width = 600,
       height = 600;
 
-  // for brushing
-  var shiftKey;
-  function keyflip() {
-    shiftKey = d3.event.shiftKey || d3.event.metaKey;
-  }
-
   var svg = d3.select("#graph")
-              .attr("tabindex", 1)
-              .on("keydown.brush", keyflip)
-              .on("keyup.brush", keyflip)
-              .each(function() { this.focus(); })
-            .append("svg")
+              .append("svg")
               .attr("width", width)
               .attr("height", height);
                 //.attr("class", 'graph-svg')
@@ -99,13 +89,9 @@ var flow = function(){
             "cx": function(d){ return d.cx; },
             "cy": function(d){ return d.cy; }
           })
-        .call(add_tooltip)
-          .call(toggle_select) 
-          .on("mousedown", function(d) {
-            if (shiftKey) d3.select(this).classed("selected", d.selected = !d.selected);
-            else node.classed("selected", function(p) { return p.selected = d === p; });
-          });
-
+        //.call(add_tooltip)
+        .call(toggle_select);
+         
   };
 
   function toggle_select(selection){
@@ -252,16 +238,12 @@ var flow = function(){
         y = d3.scale.identity().domain([0, height]);
 
     var brushstart = function(d){
-      node.each(function(d) { d.previouslySelected = shiftKey && d.selected;})
+      node.each(function(d) { d.previouslySelected = d.selected;})
     }
 
     var brushed = function() {
       var extent = brush.extent();
-      //console.log(extent);
-      //node.each(function(d) {
-      //  d.selected = (extent[0][0] <= d.cx) && (d.cx < extent[1][0])
-      //              && (extent[0][1] <= d.cy) && (d.cy < extent[1][1]);
-      //});
+
       node.classed("selected", function(d){ 
         return d.selected = d.previouslySelected ^
                        (extent[0][0] <= d.cx && d.cx < extent[1][0]
