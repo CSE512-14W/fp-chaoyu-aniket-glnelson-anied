@@ -79,6 +79,37 @@ var flow = function(){
 
   // draw the initial nodes
   var draw_ptc3_nodes = function() {
+    var drag = d3.behavior.drag()
+                  .origin(function(d) { return d; })
+                  .on("dragstart", dragstarted)
+                  .on("drag", dragged)
+                  .on("dragend", dragended);
+
+    var ox, oy;
+    function dragstarted(d) {
+      d3.event.sourceEvent.stopPropagation();
+      //d3.select(this).classed("dragging", true);
+      ox = d.cx;
+      oy = d.cy;
+    }
+
+    function dragged(d) {
+      var category = d.category;
+      var cx = ox + d3.event.x;
+      var cy = oy + d3.event.y;
+
+      _.each(node[0], function(dd){
+        if (dd.__data__.category == category) {
+          d3.select(dd).attr("cx", dd.__data__.cx = cx ).attr("cy", dd.__data__.cy = cy);
+        }
+      });
+
+    }
+
+    function dragended(d) {
+      //d3.select(this).classed("dragging", false);
+    }
+
     node = node.data(nodedata)
         .enter()
         .append("circle")
@@ -89,7 +120,8 @@ var flow = function(){
             "cx": function(d){ return d.cx; },
             "cy": function(d){ return d.cy; }
           })
-        //.call(add_tooltip)
+        .call(add_tooltip)
+        .call(drag);
         //.call(toggle_select);
          
   };

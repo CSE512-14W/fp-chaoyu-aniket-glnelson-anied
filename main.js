@@ -42,7 +42,6 @@
     d3.csv("data/F-PTC3-words95-LD-E.csv", function(data) {
       var previous_timeslot;
       
-
       _.each(data, function(d) {
         if(d.t == previous_timeslot) {
           flowdata[flowdata.length-1].push({"source": +d.src -1, "target": +d.snk - 1})

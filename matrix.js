@@ -8,7 +8,7 @@ var plotMatrix = function()  {
   // refactoring to draw from the nodes dataset
 
   var init = function(){
-
+;
       for(var i = 0; i < 40; i++)
       aggreInOut[i] = [];
 
@@ -124,8 +124,8 @@ var plotMatrix = function()  {
           }
         }
       }
-      console.log(aggreInOut);
-      console.log(in_out_degree_at_timeslot[1]);
+      //console.log(aggreInOut);
+      //console.log(in_out_degree_at_timeslot[1]);
       //generating intensity using in and out degrees
       for(var i = 0; i < in_out_degree_at_timeslot.length; i++){
         intensity[i] = [];
@@ -138,7 +138,7 @@ var plotMatrix = function()  {
         }
       }
 
-      console.log(intensity);
+      //console.log(intensity);
 
       var h = 0.8,
       w = 0.8;
