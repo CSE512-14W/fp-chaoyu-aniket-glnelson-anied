@@ -97,9 +97,11 @@ var flow = function(){
       var category = d.category;
       var cx = ox + d3.event.x;
       var cy = oy + d3.event.y;
+      console.log(category);
 
       _.each(node[0], function(dd){
         if (dd.__data__.category == category) {
+          console.log(dd);
           d3.select(dd).attr("cx", dd.__data__.cx = cx ).attr("cy", dd.__data__.cy = cy);
         }
       });
