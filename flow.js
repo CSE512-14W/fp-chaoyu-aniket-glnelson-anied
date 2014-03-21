@@ -140,6 +140,12 @@ var flow = function(){
       console.log("cur: " + cur);
       selected = _.filter(flowdata[cur % ll], function(d){ return nodedata[d.source].selected == true });
       
+      //
+
+      plotMatrix.draw(cur, duration);
+
+      //  
+
       var cutting_ratio = 1.0 / (duration - 1); // 0.2
       var draw_tail_duration = animation_duration / (duration - 1); // 500
       var flow_duration = animation_duration - draw_tail_duration; // 2000
@@ -283,6 +289,7 @@ var flow = function(){
   var init = function(){
     start_brushing();
     draw_ptc3_nodes();
+    plotMatrix.init();
   };
 
   return {

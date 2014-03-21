@@ -2,7 +2,8 @@
 // console inspect; refactor into private / local namespaces as needed
 // I checked nodeinfo for no namespace collisions
   var nodedata, groupnode, flowdata = [];
-
+  var in_out_degree_at_timeslot = 1;
+  
   var current_time_step = 0;
   var controller_brusher;
   var flow_id;
@@ -40,7 +41,7 @@
     // load the time data
     d3.csv("data/F-PTC3-words95-LD-E.csv", function(data) {
       var previous_timeslot;
-      var in_out_degree_at_timeslot = 1;
+      
 
       _.each(data, function(d) {
         if(d.t == previous_timeslot) {
@@ -62,8 +63,10 @@
           in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
         }
       });
-      plotMatrix(in_out_degree_at_timeslot, flowdata, 0);
+
+      //plotMatrix(in_out_degree_at_timeslot, flowdata, 0);
       flow.init();
+      //plotMatrix(in_out_degree_at_timeslot, flowdata, 0);
       controller_brusher = graph_contoller();
     });
 
