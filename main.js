@@ -39,7 +39,18 @@
     };
 
     // load the time data
-    d3.csv("data/F-PTC3-words95-LD-E.csv", function(data) {
+    hash = location.hash;
+    if(hash == null || hash == "") {
+      hash = '95-LD';
+    }
+    perc = hash.substring(1, 3);
+    cond = hash.substring(4, 6);
+    if(perc == '50') {
+      filename = "data/F-PTC3-words-" + cond + "-E.csv";
+    } else {
+      filename = "data/F-PTC3-words" + perc + "-" + cond + "-E.csv";
+    }
+    d3.csv(filename, function(data) {
       var previous_timeslot;
       
       _.each(data, function(d) {
