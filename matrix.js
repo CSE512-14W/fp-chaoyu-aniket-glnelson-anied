@@ -6,13 +6,24 @@ var plotMatrix = function()  {
   var intensity = [];
   var aggreInOut = [];
   // refactoring to draw from the nodes dataset
-
-  var init = function(){
-
+  
+  var zero_array = function (dimensions) {
+      var x = [];
+      
+      for (var i = 0; i<dimensions; i++){
+        x.push
+      };
+      _.each(nodes, function(d){
+        x.push([0,0]);
+      });
+      return x;
+  
+  };
+  var aggregate_matrix = function(cur, duration){
       for(var i = 0; i < 40; i++)
-      aggreInOut[i] = [];
+        aggreInOut[i] = [];
 
-      for(var i = 0; i < flowdata.length; i++){         //go thru all time slots
+      for(var i = cur; i < cur + duration; i++){         //go thru all time slots
         for(var j=0; j < flowdata[i].length;  j++){   //go thru all edges in that time slot
           var src = parseInt(flowdata[i][j].source);
           var tar = parseInt(flowdata[i][j].target);
@@ -23,16 +34,29 @@ var plotMatrix = function()  {
           }
         }
       }
+      return aggreInOut;
+  };
 
-      //generating intensity using in and out degrees
-      for(var i = 0; i < in_out_degree_at_timeslot.length; i++){
-        intensity[i] = [];
-        for(var j = 0; j < in_out_degree_at_timeslot.length; j++){
-          intensity [i][j] = 0;
-          //console.log( parseInt(in_out_degree_at_timeslot[1]) / aggreIn[j]);
-          intensity [i][j] = parseInt(in_out_degree_at_timeslot[i][1]) / aggreInOut[i][j]; //0 or 1?
+  var intensity_matrix = function (agg_matrix) {
+      var intens = [ ];
+      for(var src = 0; src < nodedata.length; src++){
+        intens[src] = [];
+        for(var tgt = 0; tgt < nodedata.length; tgt++){
+          intens [src][tgt] = 0;
+	  if (nodedata[tgt].total_in_degree != 0){
+              intens [src][tgt] = parseInt(agg_matrix[src][tgt]) / nodedata[tgt].total_in_degree;
+	  }
         }
       }
+      return intens;
+  };
+
+  var init = function(){
+      // aggregate over the whole dataset
+      aggreInOut = aggregate_matrix(0, time_max);
+
+      //generating intensity using in and out degrees
+      intensity = intensity_matrix(aggreInOut);
 
       //console.log(intensity);
 
@@ -102,44 +126,23 @@ var plotMatrix = function()  {
           .style("opacity", 1e-6);
         }
   }
-
+ 
   var draw = function(cur, duration){
 
       //remove svg
       $("#matrix").html("");
       
       //console.log(cur + '-'+duration);
-
-      for(var i = 0; i < 40; i++)
-      aggreInOut[i] = [];
-
-      for(var i = cur; i < cur + duration; i++){         //go thru all time slots
-        for(var j=0; j < flowdata[i].length;  j++){   //go thru all edges in that time slot
-          var src = parseInt(flowdata[i][j].source);
-          var tar = parseInt(flowdata[i][j].target);
-          if(isNaN(aggreInOut[src][tar])){
-            aggreInOut[src][tar] = 1;
-          }else{
-            aggreInOut[src][tar]++;
-          }
-        }
-      }
-      console.log(aggreInOut);
-      console.log(in_out_degree_at_timeslot[1]);
+      
+      // aggreInOut is a 2d matrix [src][target] = count of edges over duration
+      aggreInOut = aggregate_matrix(cur,duration);
+      
       //generating intensity using in and out degrees
-      for(var i = 0; i < in_out_degree_at_timeslot.length; i++){
-        intensity[i] = [];
-        for(var j = 0; j < in_out_degree_at_timeslot.length; j++){
-          intensity [i][j] = 0;
-          if(isNaN(aggreInOut[i][j]) == false) {
-          //console.log( parseInt(in_out_degree_at_timeslot[1]) / aggreIn[j]);
-          intensity [i][j] = parseInt(in_out_degree_at_timeslot[i][1]) / aggreInOut[i][j]; //0 or 1?
-          }
-        }
+      intensity = intensity_matrix(aggreInOut);
+
+      if (cur == 1){
+      var breakhere=1;
       }
-
-      console.log(intensity);
-
       var h = 0.8,
       w = 0.8;
 

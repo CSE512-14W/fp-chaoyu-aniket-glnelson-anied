@@ -2,8 +2,7 @@
 // console inspect; refactor into private / local namespaces as needed
 // I checked nodeinfo for no namespace collisions
   var nodedata, groupnode, flowdata = [];
-  var in_out_degree_at_timeslot = 1;
-  
+  var time_max = -1;
   var current_time_step = 0;
   var controller_brusher;
   var flow_id;
@@ -25,6 +24,9 @@
         z: +d.zcoord,
         area: d.area,
         plot: d.plot,
+	total_in_degree: 1,
+	total_out_degree: 1,
+	selected: 0,
         time_data: new Array() // index = t, [in_degree, out_degree]
       };
     });
@@ -38,37 +40,56 @@
       return x;
     };
 
+    var set_total_in_out = function(nodes){
+      for (var i = 0; i<nodes.length; i++){
+	var total_in = 0;
+	var total_out = 0;
+
+	_.each(nodes[i].time_data, function(t){
+	  total_in += t[0];
+	  total_out += t[1];
+	});
+
+	nodes[i].total_in_degree = total_in;
+	nodes[i].total_out_degree = total_out;
+      };
+    };
+
     // load the time data
     d3.csv("data/F-PTC3-words95-LD-E.csv", function(data) {
       var previous_timeslot;
-      
 
+      var this_timeslot = 1;
       _.each(data, function(d) {
         if(d.t == previous_timeslot) {
           flowdata[flowdata.length-1].push({"source": +d.src -1, "target": +d.snk - 1})
-          in_out_degree_at_timeslot[+d.src-1][1]+= 1;
-          in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
+          this_timeslot[+d.src-1][1]+= 1;
+          this_timeslot[+d.snk-1][0]+= 1;
 
         } else {
-          if (in_out_degree_at_timeslot!= 1){
+          if (this_timeslot!= 1){
             // load the in_out_degree into nodedata
             for( var i = 0; i<nodedata.length; i++){
-              nodedata[i]["time_data"].push(in_out_degree_at_timeslot[i]);
+              nodedata[i]["time_data"].push(this_timeslot[i]);
             };
           };
-          in_out_degree_at_timeslot = array_in_out_size_of_nodes(nodedata);
+          this_timeslot = array_in_out_size_of_nodes(nodedata);
           previous_timeslot = d.t;
           flowdata.push([{"source": +d.src - 1, "target": +d.snk -1}]);
-          in_out_degree_at_timeslot[+d.src-1][1]+= 1;
-          in_out_degree_at_timeslot[+d.snk-1][0]+= 1;
+          this_timeslot[+d.src-1][1]+= 1;
+          this_timeslot[+d.snk-1][0]+= 1;
         }
       });
 
+      set_total_in_out(nodedata);
+
+      time_max = flowdata.length
       //plotMatrix(in_out_degree_at_timeslot, flowdata, 0);
       flow.init();
       //plotMatrix(in_out_degree_at_timeslot, flowdata, 0);
       controller_brusher = graph_contoller();
     });
+
 
   });
 //})();
