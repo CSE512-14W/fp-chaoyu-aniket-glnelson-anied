@@ -111,8 +111,8 @@
     };
 
   // Animation parameters
-  var animation_duration = 3000;
-  var duration = 15;
+  var animation_duration = 1800;
+  var duration = 7;
   var time_interval = animation_duration / duration;
 
   var graph_contoller = function(){
@@ -289,6 +289,7 @@
               y2: function(d){ return nodedata[d.source].cy; }
             })
             .style("opacity", 0)
+            .attr("stroke-width", 1)
           .transition()
             .ease('linear')
             .duration(draw_tail_duration)
@@ -305,6 +306,7 @@
               }
             })
             .style("opacity", 0.1)
+            .attr("stroke-width", 3)
           .transition()
             .ease('linear')
             .duration(flow_duration)
@@ -333,6 +335,7 @@
               y2: function(d){ return nodedata[d.target].cy; }
             })
             .style("opacity", 0.1)
+            .attr("stroke-width", 0.5)
             .remove();
 
       packet.data(selected)
@@ -341,14 +344,14 @@
             .attr("class", '.packet')
             .attr("fill", function(d){ return c_scale(nodedata[d.source].category); })
             .style("opacity", 0)
-            .attr("r", 1)
+            .attr("r", 0.5)
             .attr("cx", function(d){ return nodedata[d.source].cx; })
             .attr("cy", function(d){ return nodedata[d.source].cy; })
           .transition()
             .ease('linear')
             .duration(animation_duration)
             .style("opacity", 0.9)
-            .attr("r", 4)
+            .attr("r", 3)
             .attr("cx", function(d){ return nodedata[d.target].cx; })
             .attr("cy", function(d){ return nodedata[d.target].cy; })
           .transition()
