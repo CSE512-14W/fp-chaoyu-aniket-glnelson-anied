@@ -8,6 +8,8 @@
   var controller_brusher;
   var flow_id;
 
+  var array_in_out_size_of_nodes;
+
   function start(){
     flow_id = flow.ptc3_flow();
   }
@@ -30,7 +32,7 @@
     });
     flow.init_scales();
  
-    var array_in_out_size_of_nodes = function(nodes){
+    array_in_out_size_of_nodes = function(nodes){
       var x = [];
       _.each(nodes, function(d){
         x.push([0,0]);
@@ -38,7 +40,12 @@
       return x;
     };
 
-    // load the time data
+    loaddata()
+  });
+
+  // load the time data
+  first_run = true;
+  function loaddata() {
     hash = location.hash;
     if(hash == null || hash == "") {
       hash = '95-LD';
@@ -52,6 +59,7 @@
     }
     d3.csv(filename, function(data) {
       var previous_timeslot;
+      flowdata = [];
       
       _.each(data, function(d) {
         if(d.t == previous_timeslot) {
@@ -74,13 +82,14 @@
         }
       });
 
-      //plotMatrix(in_out_degree_at_timeslot, flowdata, 0);
-      flow.init();
-      //plotMatrix(in_out_degree_at_timeslot, flowdata, 0);
-      controller_brusher = graph_contoller();
-    });
+      if(first_run) {
+        flow.init()
+        controller_brusher = graph_contoller();
+        first_run = false;
+      }
 
-  });
+    });
+  }
 //})();
 
 /*

@@ -16,8 +16,9 @@ if(hash == null || hash == "") {
 // Get constituents
 perc = hash.substring(1, 3);
 cond = hash.substring(4, 6);
-console.log(perc);
-console.log(cond);
+
+// Load the page's data
+loaddata();
 
 // Options
 conditions = ["HD", "LD", "HF", "LF"];
@@ -59,7 +60,8 @@ d3.select("#condition_selector")
 	.on("change", function() {
 	  	cond = conditions[this.selectedIndex];
 		location.hash = perc + "-" + cond;
-		location.reload();
+		// location.reload();
+		loaddata();
   	});
   	
 // Modify percentile
@@ -86,5 +88,6 @@ d3.select("#threshold_selector")
 	.on("change", function() {
 	  	perc = percentiles[this.selectedIndex];
 		location.hash = perc + "-" + cond;
-		location.reload();
+		// location.reload();
+		loaddata();
   	});
