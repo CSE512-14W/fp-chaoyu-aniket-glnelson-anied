@@ -19,19 +19,20 @@ var plotMatrix = function()  {
           var tar = parseInt(flowdata[i][j].target);
           if(isNaN(aggreInOut[src][tar])){
             aggreInOut[src][tar] = 1;
+            nodedata[tar].temp_in_count = 1;
           }else{
             aggreInOut[src][tar]++;
+            nodedata[tar].temp_in_count++;
           }
         }
       }
 
       //generating intensity using in and out degrees
-      for(var i = 0; i < in_out_degree_at_timeslot.length; i++){
-        intensity[i] = [];
-        for(var j = 0; j < in_out_degree_at_timeslot.length; j++){
-          intensity [i][j] = 0;
-          //console.log( parseInt(in_out_degree_at_timeslot[1]) / aggreIn[j]);
-          intensity [i][j] = parseInt(in_out_degree_at_timeslot[i][1]) / aggreInOut[i][j]; //0 or 1?
+      for(var src = 0; src < in_out_degree_at_timeslot.length; src++){
+        intensity[src] = [];
+        for(var tgt = 0; tgt < in_out_degree_at_timeslot.length; tgt++){
+          intensity [src][tgt] = 0;
+          intensity [src][tgt] = parseInt(in_out_degree_at_timeslot[src][1]) / nodedata[tgt].temp_in_count; 
         }
       }
 
@@ -122,8 +123,10 @@ var plotMatrix = function()  {
           var tar = parseInt(flowdata[i][j].target);
           if(isNaN(aggreInOut[src][tar])){
             aggreInOut[src][tar] = 1;
+            nodedata[tar].temp_in_count = 1;
           }else{
             aggreInOut[src][tar]++;
+            nodedata[tar].temp_in_count++;
           }
         }
         }
@@ -137,7 +140,7 @@ var plotMatrix = function()  {
           intensity [i][j] = 0;
           if(isNaN(aggreInOut[i][j]) == false && (nodedata[i].selected == 1 || nodedata[j].selected == 1 )) {
           //console.log( parseInt(in_out_degree_at_timeslot[1]) / aggreIn[j]);
-          intensity [i][j] = parseInt(in_out_degree_at_timeslot[i][1]) / aggreInOut[i][j]; //0 or 1?
+          intensity [i][j] = parseInt(in_out_degree_at_timeslot[i][1]) / nodedata[i].temp_in_count; //0 or 1?
           }
         }
       }
