@@ -24,9 +24,9 @@ Access our visualization at http://cse512-14w.github.io/fp-chaoyu-aniket-glnelso
 
 ## Division of Labor
 
-Each member took part in writing code and designing the system and we believe the division of labor was fair. To break it down by focused contribution:
+Each member took part in writing code and designing the system. To break it down by focused contribution:
 
-Chaoyu: Primarily coding
-Aniket: Progress report, secondary coding
-Greg: Literature review, design, paper
-Conrad: Dataset, Matlab coding, design, poster, paper
+Chaoyu: Coding lead
+Aniket: Progress report, Coding
+Greg: Literature review, deliverables
+Conrad: Dataset, Matlab coding, deliverables
