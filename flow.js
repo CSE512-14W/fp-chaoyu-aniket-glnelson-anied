@@ -10,6 +10,7 @@ var flow = function(){
                 //.attr("class", 'graph-svg')
 
   var node = svg.selectAll(".node");
+  var labels = svg.selectAll(".label");
   var packet = svg.selectAll(".packet");
 
   // flowdata is [[src, target], ...], next timestep, ...]
@@ -101,31 +102,46 @@ var flow = function(){
 
       _.each(node[0], function(dd){
         if (dd.__data__.category == category) {
-          console.log(dd);
           d3.select(dd).attr("cx", dd.__data__.cx = cx ).attr("cy", dd.__data__.cy = cy);
         }
       });
 
+      _.each(labels[0], function(dd){
+        if (dd.__data__.category == category) {
+          d3.select(dd).attr("x", dd.__data__.cx = cx - dd.__data__.category.length * 2.8)
+                        .attr("y", dd.__data__.cy = cy + 4);
+        }
+      });
     }
 
     function dragended(d) {
       //d3.select(this).classed("dragging", false);
     }
 
-    node = node.data(nodedata)
+    gnodes = node.data(nodedata)
         .enter()
-        .append("circle")
+        .append("g")
+
+    node = gnodes.append("circle")
           .attr({
             "class": function(d){ return "node " + d.category; },
             "fill": function(d){ return c_scale(d.category); },
-            "r": function(d){ return (d.r * 3) + 4; },
+            "r": 20,
             "cx": function(d){ return d.cx; },
             "cy": function(d){ return d.cy; }
           })
         .call(add_tooltip)
         .call(drag);
         //.call(toggle_select);
-         
+
+    labels = gnodes.append("text")
+          .text(function(d){ return d.category;})
+          .attr({
+            "x": function(d){ return d.cx - d.category.length*2.8; },
+            "y": function(d){ return d.cy + 4; },
+            "font-size": '10px',
+            "font-family": 'sans-serif'
+          })
   };
 
   //function toggle_select(selection){
