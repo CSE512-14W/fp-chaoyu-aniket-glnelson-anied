@@ -28,11 +28,11 @@ var plotMatrix = function()  {
       }
 
       //generating intensity using in and out degrees
-      for(var src = 0; src < in_out_degree_at_timeslot.length; src++){
+      for(var src = 0; src < nodedata.length; src++){
         intensity[src] = [];
-        for(var tgt = 0; tgt < in_out_degree_at_timeslot.length; tgt++){
+        for(var tgt = 0; tgt < nodedata.length; tgt++){
           intensity [src][tgt] = 0;
-          intensity [src][tgt] = parseInt(in_out_degree_at_timeslot[src][1]) / nodedata[tgt].temp_in_count; 
+          intensity [src][tgt] = parseInt(aggreInOut[src][tgt]) / nodedata[tgt].temp_in_count; 
         }
       }
 
