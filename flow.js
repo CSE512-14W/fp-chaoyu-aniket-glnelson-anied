@@ -347,6 +347,7 @@ var flow = function(){
     init_scales: init_scales,
     ptc3_flow: ptc3_flow,
     duration: duration,
+    time_interval: time_interval,
     animation_duration: animation_duration
   };
 }();

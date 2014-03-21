@@ -131,7 +131,7 @@ var plotMatrix = function()  {
         intensity[i] = [];
         for(var j = 0; j < in_out_degree_at_timeslot.length; j++){
           intensity [i][j] = 0;
-          if(isNaN(aggreInOut[i][j]) == false) {
+          if(isNaN(aggreInOut[i][j]) == false && (nodedata[i].selected == 1 || nodedata[j].selected == 1 )) {
           //console.log( parseInt(in_out_degree_at_timeslot[1]) / aggreIn[j]);
           intensity [i][j] = parseInt(in_out_degree_at_timeslot[i][1]) / aggreInOut[i][j]; //0 or 1?
           }
