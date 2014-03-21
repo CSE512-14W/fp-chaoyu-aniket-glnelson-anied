@@ -98,15 +98,21 @@ body {
 }
 
 div.tooltip {
-          position: absolute;
-          text-align: left;
-          width: 100px;
-          color:white;
-          padding: 8px;
-          font: 10px sans-serif;
-          background: black;
-          border: solid 1px #aaa;
-          pointer-events: none;
-      }
+  position: absolute;
+  text-align: left;
+  width: 100px;
+  color:white;
+  padding: 8px;
+  font: 10px sans-serif;
+  background: black;
+  border: solid 1px #aaa;
+  pointer-events: none;
+}
+
+#matrix {
+  padding-top: 15%;
+}
+
+
 
 

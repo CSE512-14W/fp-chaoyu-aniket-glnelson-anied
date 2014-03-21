@@ -101,14 +101,6 @@
             "cy": function(d){ return d.cy; }
           })
         .call(add_tooltip); 
-       /* .append('div') // gn todo uncomment and see if works
-          .attr({
-            "class": function(d){ return "nodename" + d.category; },
-            "cx": function(d){ return d.cx; },
-            "cy": function(d){ return d.cy; }
-          })
-          .text(function(d){ return "nodename" + d.category; });
-	*/
   };
 
   var update_textbox = function(start){
@@ -119,11 +111,9 @@
     };
 
   // Animation parameters
-
   var animation_duration = 3000;
-  var duration = 20;
+  var duration = 15;
   var time_interval = animation_duration / duration;
-  var time_divisions = 5;
 
   var graph_contoller = function(){
     
@@ -190,7 +180,7 @@
       // wasn't working out well
       //current_time_step = start;
       //d3.select(this).transition() // i think not working bc of how initialized
-       // .call(brush.extent(target_extent));
+      // .call(brush.extent(target_extent));
     };
 
     var brushended = function() {
@@ -204,9 +194,9 @@
         .call(brush.extent(target_extent));
       // was trying to get this to be instantly brushable
       // wasn't working out well, need refactor drawing
-	// to make it work well I think
-	// so draw has interface draw(start,stop,loop_start,loop_end)
-	// that sets up interval etc
+      // to make it work well I think
+      // so draw has interface draw(start,stop,loop_start,loop_end)
+      // that sets up interval etc
       // update_time_step(current_time_step);
     };
 
@@ -274,8 +264,8 @@
       console.log("cur: " + cur);
       selected = _.filter(flowdata[cur % ll], function(d){ return nodedata[d.source].selected == true });
       
-      var cutting_ratio = 1.0 / time_divisions; // 0.2
-      var draw_tail_duration = animation_duration / time_divisions; // 500
+      var cutting_ratio = 1.0 / (duration - 1); // 0.2
+      var draw_tail_duration = animation_duration / (duration - 1); // 500
       var flow_duration = animation_duration - draw_tail_duration; // 2000
 
       // TODO refactor to include and offset on xsrc, xdest, ysrc, ydest
@@ -411,106 +401,6 @@
     brushended();
   };
 
-  var plotMatrix = function(in_out_degree_at_timeslot, flowdata, time)  {
-    var intensity = [];
-    var aggreInOut = [];
-    // refactoring to draw from the nodes dataset
-
-    for(var i = 0; i < 40; i++)
-      aggreInOut[i] = [];
-
-    for(var i = 0; i < flowdata.length; i++){         //go thru all time slots
-      for(var j=0; j < flowdata[i].length;  j++){   //go thru all edges in that time slot
-        var src = parseInt(flowdata[i][j].source);
-        var tar = parseInt(flowdata[i][j].target);
-        if(isNaN(aggreInOut[src][tar])){
-          aggreInOut[src][tar] = 0;
-        }else{
-          aggreInOut[src][tar]++;
-        }
-      }
-    }
-
-    //generating intensity using in and out degrees
-    for(var i = 0; i < in_out_degree_at_timeslot.length; i++){
-      intensity[i] = [];
-      for(var j = 0; j < in_out_degree_at_timeslot.length; j++){
-        intensity [i][j] = 0;
-        //console.log( parseInt(in_out_degree_at_timeslot[1]) / aggreIn[j]);
-        intensity [i][j] = parseInt(in_out_degree_at_timeslot[1]) / aggreInOut[i][j]; //0 or 1?
-      }
-    }
-
-    //console.log(intensity);
-
-    var h = 1,
-        w = 1;
-
-    var colorLow = '#f1f1f1', colorHigh = 'darkred';
-    var colorScale = d3.scale.linear()
-     .domain([0.04, 0.09])
-     .range([colorLow, colorHigh]);
-
-    var svg = d3.select("#matrix").append("svg")
-    .attr("width", w * 15 * 40)
-    .attr("height", h * 15 * 40)
-    .append("g");
-
-    var x = d3.scale.linear()
-    .range([0, width])
-    .domain([0,intensity[0].length]);
-
-    var y = d3.scale.linear()
-    .range([0, height])
-    .domain([0,intensity.length]);
-
-    var row = svg.selectAll(".row")
-             .data(intensity)
-           .enter().append("svg:g")
-             .attr("class", "row");
-
-    var col = row.selectAll(".cell")
-    .data(function (d, i) { return d.map(function(a) { return {value: a, row: i}; } ) })
-           .enter().append("svg:rect")
-             .attr("class", "cell")
-             .attr("x", function(d, i) { return x(i) * w; })
-             .attr("y", function(d, i) { return y(d.row) * h; })
-             .attr("width", x(1) * w)
-             .attr("height", y(1) * h)
-             .style("fill", function(d) { 
-              if(isNaN(d.value)){
-                return '#f1f1f1';
-              }
-              return colorScale(d.value); })
-             .on('mousemove', function(d, i){mousemove(d, i)})
-             .on("mouseover", mouseover)
-             .on("mouseout", mouseout);
-
-    var div = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 1e-6);
-
-        function mousemove(d, i){
-          div
-          .html("Source: " + (i + 1) + "<br/>" + "Target: " + (d.row + 1) + " " + "Intensity: " + (d.value * 100).toFixed(2))
-          .style("left", (d3.event.pageX ) + "px")
-          .style("top", (d3.event.pageY) + "px");
-        }
-
-        function mouseover() {
-            div.transition()
-            .duration(300)
-            .style("opacity", 1);
-        }
-
-        function mouseout() {
-            div.transition()
-            .duration(300)
-            .style("opacity", 1e-6);
-        }
-  }
-
-  
   d3.csv("data/PTC3-V.csv", function(data) {
     nodedata = data.map(function(d) {
       return {
