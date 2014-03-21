@@ -3,8 +3,18 @@ var flow = function(){
       width = 600,
       height = 600;
 
+  // for brushing
+  var shiftKey;
+  function keyflip() {
+    shiftKey = d3.event.shiftKey || d3.event.metaKey;
+  }
+
   var svg = d3.select("#graph")
-              .append("svg")
+              .attr("tabindex", 1)
+              .on("keydown.brush", keyflip)
+              .on("keyup.brush", keyflip)
+              .each(function() { this.focus(); })
+            .append("svg")
               .attr("width", width)
               .attr("height", height);
                 //.attr("class", 'graph-svg')
@@ -51,6 +61,10 @@ var flow = function(){
     _.each(nodedata, function(d) {
       d.cx = x_scale(d.x);
       d.cy = y_scale(d.y);
+
+      // coords for label
+      d.lx = x_scale(d.x * 1.2);
+      d.ly = y_scale(d.y * 1.2);
     });
   };
 
@@ -85,8 +99,13 @@ var flow = function(){
             "cx": function(d){ return d.cx; },
             "cy": function(d){ return d.cy; }
           })
-        //.call(add_tooltip)
-        .call(toggle_select);
+        .call(add_tooltip)
+          .call(toggle_select) 
+          .on("mousedown", function(d) {
+            if (shiftKey) d3.select(this).classed("selected", d.selected = !d.selected);
+            else node.classed("selected", function(p) { return p.selected = d === p; });
+          });
+
   };
 
   function toggle_select(selection){
@@ -228,44 +247,50 @@ var flow = function(){
     return setInterval(flow, time_interval);
   }
 
-  // TODO switch to nodes being clicked or not
-  //var start_brushing = function(){
-  //  var defaultExtent = [[7, 132], [216, 450]],
-  //      x = d3.scale.identity().domain([0, width]),
-  //      y = d3.scale.identity().domain([0, height]);
+  var start_brushing = function(){
+    var x = d3.scale.identity().domain([0, width]),
+        y = d3.scale.identity().domain([0, height]);
 
-  //  var brushed = function() {
-  //    var extent = brush.extent();
-  //    console.log(extent);
-  //    node.each(function(d) {
-  //      d.selected = (extent[0][0] <= d.cx) && (d.cx < extent[1][0])
-  //                  && (extent[0][1] <= d.cy) && (d.cy < extent[1][1]);
-  //    });
-  //    node.classed("selected", function(d){ return d.selected;})
-  //  };
+    var brushstart = function(d){
+      node.each(function(d) { d.previouslySelected = shiftKey && d.selected;})
+    }
+
+    var brushed = function() {
+      var extent = brush.extent();
+      //console.log(extent);
+      //node.each(function(d) {
+      //  d.selected = (extent[0][0] <= d.cx) && (d.cx < extent[1][0])
+      //              && (extent[0][1] <= d.cy) && (d.cy < extent[1][1]);
+      //});
+      node.classed("selected", function(d){ 
+        return d.selected = d.previouslySelected ^
+                       (extent[0][0] <= d.cx && d.cx < extent[1][0]
+                    && extent[0][1] <= d.cy && d.cy < extent[1][1])
+      });
+    };
 
 
-  //  var brushended = function() {
-  //    console.log("brushended");
-  //  };
+    var brushended = function() {
+      console.log("brushended");
+      d3.event.target.clear();
+      d3.select(this).call(d3.event.target);
+    };
 
-  //  var brush = d3.svg.brush()
-  //                .x(x)
-  //                .y(y)
-  //                .extent(defaultExtent)
-  //                .on("brush", brushed)
-  //                .on("brushend", brushended);
+    var brush = d3.svg.brush()
+                  .x(x)
+                  .y(y)
+                  .on("brushstart", brushstart)
+                  .on("brush", brushed)
+                  .on("brushend", brushended);
    
-  //  svg.append("g")
-  //    .attr("class", "brush")
-  //    .call(brush)
-  //    .call(brush.event);
-    
-  //  ptc3_network();
-  //  brushed();
-  //  brushended();
-  //};
+    svg.append("g")
+      .datum(function() { return {selected: false, previouslySelected: false}; })
+      .attr("class", "brush")
+      .call(brush);
+  };
+
   var init = function(){
+    start_brushing();
     draw_ptc3_nodes();
   };
 
