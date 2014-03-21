@@ -21,12 +21,13 @@ cond = hash.substring(4, 6);
 //loaddata();
 
 // Options
-conditions = ["HD", "LD", "HF", "LF"];
+conditions = ["HD", "LD", "HF", "LF", "NU"];
 percentiles = ["99", "95", "50"];
 condition_labels = {"HD": "High Lexical Density",
 					"LD": "Low Lexical Density",
 					"HF": "High Phonological Frequency",
-					"LF": "Low Phonological Frequency"};
+          "LF": "Low Phonological Frequency",
+          "NU": "Random Data (Null Hypothesis)"};
 
 // Set the datamenu
 var datamenu_area = d3.select('#datamenu')
