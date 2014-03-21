@@ -23,6 +23,9 @@
   function start(){
     flow_id = ptc3_flow();
   }
+  function stop(){
+    if (flow_id !== undefined) clearInterval(flow_id);
+  }
   window.start = start;
 
   var init_scales = function() {
@@ -60,8 +63,14 @@
     _.each(nodedata, function(d) {
       d.cx = x_scale(d.x);
       d.cy = y_scale(d.y);
+      console.log(d.cx + " " + d.cy + " " + d.category)
+      // svg.append("div")
+      //   .style({"display":"block",
+      //     "position":"absolute",
+      //     "cx": d.cx,
+      //     "cy": d.cy})
+      //   .text(d.category); 
     });
-
   };
 
   var circle_layout = function() {
@@ -95,19 +104,75 @@
             "cx": function(d){ return d.cx; },
             "cy": function(d){ return d.cy; }
           })
-        .call(add_tooltip); 
+        .call(add_tooltip)
+        .append('div')
+          .attr({
+            "class": function(d){ return "nodename" + d.category; },
+            "cx": function(d){ return d.cx; },
+            "cy": function(d){ return d.cy; }
+          })
+          .text(function(d){ return "nodename" + d.category; });
   };
 
+  var update_textbox = function(start){
+      d3.select("#textbox_timestart")
+        .attr("value", start);
+      d3.select("#textbox_timestop")
+        .attr("value", start + duration);
+    };
+
+  // Animation parameters
+
+  var animation_duration = 3000;
+  var duration = 20;
+  var time_interval = animation_duration / duration;
+  var time_divisions = 5;
+
   var graph_contoller = function(){
-    var controller_height = 40;
-    var controller_width = 900;
-    var x = d3.scale.identity().domain([0, controller_width]);
-    var defaultExtent = [0,6];
     
-    var svg = d3.select("#controller")
-                .append("svg")
-                .attr("width", controller_width)
-                .attr("height", controller_height);
+    var controller_area = d3.select('#controller')
+      .attr('width', 600)
+      .attr('height', 60)
+      .style("display","block")
+      .style("margin","auto")
+      .style("width","600px");
+
+    // Add control buttons
+    controller_area.append("input")
+      .attr("type","button")
+      .attr("class","btn btn-default")
+      .attr("value", "Start")
+      .on("click", start);
+    controller_area.append("input")
+      .attr("type","button")
+      .attr("class","btn btn-default")
+      .attr("value", "Stop")
+      .on("click", stop);
+    controller_area.append("input")
+      .attr('id', 'textbox_timestart')
+      .style("width","40px")
+      .attr("value", "0");
+      // .on("click", function (d) {
+      //   current_time_step = parseInt(d3.select('#textbox_timestart').attr('value'));
+      //   });
+    controller_area.append("span")
+      .text(' to ');
+    controller_area.append("input")
+      .attr('id', 'textbox_timestop')
+      .style("width","40px")
+      .attr("value", "7");
+      // .on("click", time_update(0, 7));
+    controller_area.append("span")
+      .text(' ms');
+
+    var controller_height = 40;
+    var controller_width = 600;
+    var x = d3.scale.identity().domain([0, controller_width]);
+    var defaultExtent = [0,duration];
+    
+    var slidersvg = controller_area.append("svg")
+        .attr("width", controller_width)
+        .attr("height", controller_height);
 
     var controller_scale = d3.scale.linear()
                             .domain([0, 600])
@@ -115,8 +180,10 @@
                             .nice();
 
     var brushed = function() {
-      //if (flow_id !== undefined) clearInterval(flow_id);
-      console.log("c brushed");
+      var extent = brush.extent();
+      var start = Math.floor(extent[0])
+      update_textbox(start);
+      stop();
     };
 
     var brushended = function() {
@@ -124,12 +191,10 @@
 
       var extent = brush.extent();
       var start = Math.floor(extent[0])
-      var target_extent = [start, start + 6];
+      var target_extent = [start, start + duration];
       current_time_step = start;
-
       d3.select(this).transition()
-        .call(brush.extent(target_extent))
-        .call(brush.event)
+        .call(brush.extent(target_extent));
     };
 
     var brush = d3.svg.brush()
@@ -138,14 +203,14 @@
                   .on("brush", brushed)
                   .on("brushend", brushended);
 
-       svg.append("rect")
+    slidersvg.append("rect")
         .attr({
           width: controller_width,
           height: controller_height,
           class: 'controller-background'
         });
 
-    var gBrush = svg.append("g")
+    var gBrush = slidersvg.append("g")
                     .attr("class", "brush")
                     .call(brush)
                     .call(brush.event);
@@ -172,15 +237,15 @@
     return starting_point + (ratio * delta);
   }
 
-  var animation_duration = 3000;
-  var time_divisions = 5;
-
   var update_time_step = function(cur) {
     current_time_step = cur;
     d3.select("#controller g")
       .transition()
-      .call(controller_brusher.extent([cur, cur+6]))
+      .call(controller_brusher.extent([cur, cur+duration]));
+
+    update_textbox(cur);
   }
+
 
   var ptc3_flow = function(){
     console.log("redraw");
@@ -280,7 +345,7 @@
       cur++;
       update_time_step(cur);
     }
-    return setInterval(flow, 500);
+    return setInterval(flow, time_interval);
   }
 
   var start_brushing = function(){
@@ -322,7 +387,7 @@
   };
 
   
-  d3.csv("../../data/PTC3_V.csv", function(data) {
+  d3.csv("../../data/PTC3-V.csv", function(data) {
     nodedata = data.map(function(d) {
       return {
         label: d.label,
@@ -345,7 +410,7 @@
     };
 
     // load the time data
-    d3.csv("../../data/F_PTC3_words_LD_E.csv", function(data) {
+    d3.csv("../../data/F-PTC3-words95-LD-E.csv", function(data) {
       var previous_timeslot;
       var in_out_degree_at_timeslot = 1;
 

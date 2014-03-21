@@ -2,15 +2,30 @@
 
 require 'json'
 
-HD_data = "PTC3_words_HD_E"
-HF_data = "PTC3_words_HF_E"
-LD_data = "PTC3_words_LD_E"
-LF_data = "PTC3_words_LF_E"
+HD_data = "PTC3-words-HD-E"
+HF_data = "PTC3-words-HF-E"
+LD_data = "PTC3-words-LD-E"
+LF_data = "PTC3-words-LF-E"
 
-#FILE_NAME = HD_data
-#FILE_NAME = HF_data
-#FILE_NAME = LD_data
-FILE_NAME = LF_data
+HD95data = "PTC3-words95-HD-E"
+HF95data = "PTC3-words95-HF-E"
+LD95data = "PTC3-words95-LD-E"
+LF95data = "PTC3-words95-LF-E"
+HD99data = "PTC3-words99-HD-E"
+HF99data = "PTC3-words99-HF-E"
+LD99data = "PTC3-words99-LD-E"
+LF99data = "PTC3-words99-LF-E"
+HDnulldata = "PTC3-wordsnull-HD-E"
+HFnulldata = "PTC3-wordsnull-HF-E"
+LDnulldata = "PTC3-wordsnull-LD-E"
+LFnulldata = "PTC3-wordsnull-LF-E"
+
+NUdata = "PTC3-words-NU-E"
+NU95data = "PTC3-words95-NU-E"
+NU99data = "PTC3-words99-NU-E"
+
+
+FILE_NAME = NU99data
 
 def formatting_data
   flow_data = File.open(FILE_NAME + ".csv", "r")
@@ -30,7 +45,7 @@ def formatting_data
     end
   end
 
-  output = File.open("F_" + FILE_NAME + ".csv", "w+")
+  output = File.open("F-" + FILE_NAME + ".csv", "w+")
 
   timetable.keys.each_with_index do |time_slot, index|
     timetable[time_slot].each do |packet|

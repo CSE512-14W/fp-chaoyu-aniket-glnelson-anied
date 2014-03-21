@@ -1,0 +1,120 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #f1f1f1;
+}
+
+.link {
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.title {
+  text-align: center;
+  font-size: 22pt;
+}
+
+#graph svg {
+  display: block;
+  margin: auto;
+}
+
+#controller svg {
+  display: block;
+  margin: auto;
+}
+
+.node {
+  cursor: move;
+  fill-opacity: .8;
+}
+
+.node.fixed {
+  fill: #f00;
+}
+
+.node.selected {
+  stroke: black;
+  stroke-width: 3;
+  stroke-opacity: .5;
+}
+
+/*.packet {*/
+/*  fill: #ff0000;*/
+/*  stroke: none;*/
+/*}*/
+
+
+.tooltip_title {
+  font-size: 12pt;
+}
+
+.tooltip_function {
+  font-style: italic;
+  font-size: 10pt;
+}
+
+/*.axis text {*/
+/*  font: 11px sans-serif;*/
+/*}*/
+
+.axis path {
+  display: none;
+}
+
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.grid-background {
+  fill: #ddd;
+}
+
+.grid line,
+.grid path {
+  fill: none;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
+
+.grid .minor.tick line {
+  stroke-opacity: .5;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+#controller .brush .extent {
+  stroke: #000;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+.controller-background {
+  fill: #ddd;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: left;
+  width: 100px;
+  color:white;
+  padding: 8px;
+  font: 10px sans-serif;
+  background: black;
+  border: solid 1px #aaa;
+  pointer-events: none;
+}
+
+#matrix {
+  padding-top: 15%;
+}
+
+
+
+

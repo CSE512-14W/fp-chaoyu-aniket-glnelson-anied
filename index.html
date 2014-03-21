@@ -8,25 +8,38 @@
     <title>Network Flow</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <link href="css/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link href="main.css" rel="stylesheet">
   </head>
   
   <body>
     <div class="container">
-      <h1 class='title'>&nbsp;Neural Activity of Phonotactic Constraints Visualization</h1>
-      <div id="graph"></div>
+      <div class="container">
+        <h1 class='title'>&nbsp;Network Flow: Visualizing Neurological Connectivity</h1>
+        <div class="row">
+          <div id="datamenu"></div>
+          <div class="col-md-6">
+            <div id="graph"></div>
+          </div>
+          <div class="col-md-5 col-md-offset-1">
+            <div id="matrix" ></div>
+          </div>
+        </div>
 
-      <button id="play-btn" type="button" class="btn btn-default" onclick="start()">Start</button>
-      <div id="controller"></div>
+        <div id="controller"></div>
+      </div>
     </div>
 
     <script src="lib/d3.v3.min.js"></script>
     <script src="lib/underscore.js"></script>
-    <script src="src/nodeinfo.js"></script>
-    <script src="src/main.js"></script>
+    <script src="matrix.js"></script>
+    <script src="flow.js"></script>
+    <script src="flow-controller.js"></script>
+    <script src="main.js"></script>
+    <script src="datamenu.js"></script>
+    <script src="nodeinfo.js"></script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   </body>
 </html>
