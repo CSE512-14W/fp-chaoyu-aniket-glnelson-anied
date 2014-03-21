@@ -47,8 +47,8 @@ var plotMatrix = function()  {
       .range([colorLow, colorMed, colorHigh]);
 
       var svg = d3.select("#matrix").append("svg")
-      .attr("width", w * 15 * 40)
-      .attr("height", h * 15 * 40)
+      .attr("width", w * 15 * 40 + 60)
+      .attr("height", h * 15 * 40 + 60)
       .append("g");
 
       var x = d3.scale.linear()
@@ -58,6 +58,41 @@ var plotMatrix = function()  {
       var y = d3.scale.linear()
       .range([0, height])
       .domain([0,intensity.length]);
+
+      var textX = svg.selectAll("text")
+         .data(nodedata)
+                        .enter()
+                        .append("text")
+                        .attr("transform", function(d, i) { return "translate(" + (70 + x(i)/1.25) + ", " + 50 + ")rotate(-90)"; });
+
+      //Add SVG Text Element Attributes
+      
+      var textLabelsX = textX
+                 .attr("x", function(d,i) { return 0; })
+                 .attr("y", function(d) { return 0; })
+                 .attr("text-anchor", "start")
+                 .text( function (d,i) { return nodedata[i].label; })
+                 .attr("font-family", "sans-serif")
+                 .attr("font-size", "10px")
+                 .attr("fill", "black");
+      
+      var textY = svg.selectAll("textY")
+         .data(nodedata)
+                        .enter()
+                        .append("text")
+                        .attr("transform", function(d, i) { return "translate(" + 0 + ", " + (60 + y(i)/1.25) + ")"; });
+      
+      //Add SVG Text Element Attributes
+      var textLabelsY = textY
+                 .attr("x", function(d,i) { return 0; })
+                 .attr("y", function(d) { return 0; })
+                 .attr("text-anchor", "start")
+                 .text( function (d,i) { return nodedata[i].label; })
+                 .attr("font-family", "sans-serif")
+                 .attr("font-size", "10px")
+                 .attr("fill", "black");
+
+
 
       var row = svg.selectAll(".row")
       .data(intensity)
@@ -72,6 +107,7 @@ var plotMatrix = function()  {
       .attr("y", function(d, i) { return y(d.row) * h; })
       .attr("width", x(1) * w)
       .attr("height", y(1) * h)
+      .attr("transform", function(d, i) { return "translate(" + 60 + ", " + 50 + ")"; })
       .style("fill", function(d) { 
         if(isNaN(d.value)){
           return '#f1f1f1';
@@ -87,7 +123,7 @@ var plotMatrix = function()  {
 
         function mousemove(d, i){
           div
-          .html("Source: " + (i + 1) + "<br/>" + "Target: " + (d.row + 1) + " " + "Intensity: " + (d.value).toFixed(2))
+          .html("Target: " + nodedata[i].label + "<br/>" + "Source: " + nodedata[d.row].label + " " + "Intensity: " + (d.value).toFixed(2))
           .style("left", (d3.event.pageX ) + "px")
           .style("top", (d3.event.pageY) + "px");
         }
@@ -156,8 +192,8 @@ var plotMatrix = function()  {
       .range([colorLow, colorMed, colorHigh]);
 
       var svg = d3.select("#matrix").append("svg")
-      .attr("width", w * 15 * 40)
-      .attr("height", h * 15 * 40)
+      .attr("width", w * 15 * 40 + 60)
+      .attr("height", h * 15 * 40 + 60)
       .append("g");
 
       var x = d3.scale.linear()
@@ -167,6 +203,41 @@ var plotMatrix = function()  {
       var y = d3.scale.linear()
       .range([0, height])
       .domain([0,intensity.length]);
+
+
+      var textX = svg.selectAll("text")
+         .data(nodedata)
+                        .enter()
+                        .append("text")
+                        .attr("transform", function(d, i) { return "translate(" + (70 + x(i)/1.25) + ", " + 50 + ")rotate(-90)"; });
+
+      //Add SVG Text Element Attributes
+      
+      var textLabelsX = textX
+                 .attr("x", function(d,i) { return 0; })
+                 .attr("y", function(d) { return 0; })
+                 .attr("text-anchor", "start")
+                 .text( function (d,i) { return nodedata[i].label; })
+                 .attr("font-family", "sans-serif")
+                 .attr("font-size", "10px")
+                 .attr("fill", "black");
+      
+      var textY = svg.selectAll("textY")
+         .data(nodedata)
+                        .enter()
+                        .append("text")
+                        .attr("transform", function(d, i) { return "translate(" + 0 + ", " + (60 + y(i)/1.25) + ")"; });
+      
+      //Add SVG Text Element Attributes
+      var textLabelsY = textY
+                 .attr("x", function(d,i) { return 0; })
+                 .attr("y", function(d) { return 0; })
+                 .attr("text-anchor", "start")
+                 .text( function (d,i) { return nodedata[i].label; })
+                 .attr("font-family", "sans-serif")
+                 .attr("font-size", "10px")
+                 .attr("fill", "black");
+
 
       var row = svg.selectAll(".row")
       .data(intensity)
@@ -181,10 +252,12 @@ var plotMatrix = function()  {
       .attr("y", function(d, i) { return y(d.row) * h; })
       .attr("width", x(1) * w)
       .attr("height", y(1) * h)
+      .attr("transform", function(d, i) { return "translate(" + 60 + ", " + 50 + ")"; })
       .style("fill", function(d) { 
         if(isNaN(d.value)){
           return '#f1f1f1';
         }
+        
         
         return colorScale(d.value); })
         .on('mousemove', function(d, i){mousemove(d, i)})
@@ -199,7 +272,7 @@ var plotMatrix = function()  {
 
         function mousemove(d, i){
           div
-          .html("Source: " + (i + 1) + "<br/>" + "Target: " + (d.row + 1) + " " + "Intensity: " + (d.value).toFixed(2))
+          .html("Target: " + nodedata[i].label + "<br/>" + "Source: " + nodedata[d.row].label + " " + "Intensity: " + (d.value).toFixed(2))
           .style("left", (d3.event.pageX ) + "px")
           .style("top", (d3.event.pageY) + "px");
         }
@@ -215,6 +288,7 @@ var plotMatrix = function()  {
           .duration(300)
           .style("opacity", 1e-6);
         }
+
   }
 
 
