@@ -99,6 +99,7 @@
         flow.init()
         controller_brusher = graph_contoller();
         first_run = false;
+        add_tooltips();
       }
 
       plotMatrix.init();

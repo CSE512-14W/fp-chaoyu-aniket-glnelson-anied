@@ -31,16 +31,20 @@ condition_labels = {"HD": "High Lexical Density",
 
 // Set the datamenu
 var datamenu_area = d3.select('#datamenu')
-  .attr('width', 600)
+  .attr('width', 750)
   .attr('height', 20)
   .style("display","block")
   .style("margin","auto")
-  .style("width","600px");
+  .style("text-align","center")
+  .style("width","750px");
 
 // Modify Condition
 datamenu_area.append("span")
-  .text('Condition:')
-  .style('padding', '0px 5px 0px 5px');
+  .text('Neural processing while hearing words.');
+
+datamenu_area.append("span")
+  .text('Group:')
+  .style('padding', '0px 5px 0px 10px');
 
 datamenu_area.append("select")
   .attr('id', 'condition_selector')
@@ -68,7 +72,7 @@ d3.select("#condition_selector")
 // Modify percentile
 datamenu_area.append("span")
   .text('GCI Percentile:')
-  .style('padding', '0px 5px 0px 20px');
+  .style('padding', '0px 5px 0px 15px');
 
 datamenu_area.append("select")
   .attr('id', 'threshold_selector')

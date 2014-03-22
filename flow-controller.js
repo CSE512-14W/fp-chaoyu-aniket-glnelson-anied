@@ -123,7 +123,7 @@ var graph_contoller = function(){
     var end = Math.floor(extent[1])
 
     flow.duration = Math.min(end - start, 50);
-    flow.duration = Math.max(flow.duration, 7);
+    flow.duration = Math.max(flow.duration, 3);
     console.log(flow.duration);
     // flow.time_interval = flow.animation_duration / flow.duration;
 

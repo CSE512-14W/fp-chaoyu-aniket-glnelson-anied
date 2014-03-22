@@ -68,7 +68,7 @@ function tooltip_move(x, y) {
 	if(x > 750)
 		tooltip.style("left", (x + 30) + "px");
 	else
-		tooltip.style("left", (x - 210) + "px");
+		tooltip.style("left", (x - 230) + "px");
 }
 
 function tooltip_close() {
