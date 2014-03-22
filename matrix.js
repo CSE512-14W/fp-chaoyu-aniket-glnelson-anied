@@ -270,8 +270,8 @@ var plotMatrix = function()  {
         return colorScale(d.value); })
         .on('mousemove', function(d, i){mousemove(d, i)})
         .on("mouseover", mouseover)
-        .on("mouseout", mouseout)
-        .transition();
+        .on("mouseout", mouseout);
+        //.transition();
 
 
         var div = d3.select("body").append("div")
