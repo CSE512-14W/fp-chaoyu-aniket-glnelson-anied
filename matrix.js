@@ -6,7 +6,9 @@ var plotMatrix = function()  {
   var intensity = [];
   var aggreInOut = [];
   // refactoring to draw from the nodes dataset
-
+  var key = function(d){
+    return d
+  };
   var init = function(){
       $("#matrix").html("");
 
@@ -141,10 +143,15 @@ var plotMatrix = function()  {
         }
   }
 
+  // can speed up by
+  // turning off the old edges
+  // and turning on the new edges
+  // so O(edges) instead of O(n^2)
   var draw = function(cur, duration){
 
       //remove svg
-      $("#matrix").html("");
+      // TODO performance - remove, don't append each time
+      //$("#matrix").html("");
       
       //console.log(cur + '-'+duration);
 
@@ -191,11 +198,11 @@ var plotMatrix = function()  {
       .domain([0, 1, 10])
       .range([colorLow, colorMed, colorHigh]);
 
-      var svg = d3.select("#matrix").append("svg")
+      var svg = d3.select("#matrix")/*.append("svg")
       .attr("width", w * 15 * 40 + 60)
       .attr("height", h * 15 * 40 + 60)
       .append("g");
-
+*/
       var x = d3.scale.linear()
       .range([0, width])
       .domain([0,intensity[0].length]);
@@ -205,7 +212,7 @@ var plotMatrix = function()  {
       .domain([0,intensity.length]);
 
 
-      var textX = svg.selectAll("text")
+ /*     var textX = svg.selectAll("text")
          .data(nodedata)
                         .enter()
                         .append("text")
@@ -238,15 +245,16 @@ var plotMatrix = function()  {
                  .attr("font-size", "10px")
                  .attr("fill", "black");
 
-
+*/
       var row = svg.selectAll(".row")
       .data(intensity)
-      .enter().append("svg:g")
+      //.enter().append("svg:g")
+      
       .attr("class", "row");
 
       var col = row.selectAll(".cell")
       .data(function (d, i) { return d.map(function(a) { return {value: a, row: i}; } ) })
-      .enter().append("svg:rect")
+      //.enter().append("svg:rect")
       .attr("class", "cell")
       .attr("x", function(d, i) { return x(i) * w; })
       .attr("y", function(d, i) { return y(d.row) * h; })
@@ -262,7 +270,8 @@ var plotMatrix = function()  {
         return colorScale(d.value); })
         .on('mousemove', function(d, i){mousemove(d, i)})
         .on("mouseover", mouseover)
-        .on("mouseout", mouseout);
+        .on("mouseout", mouseout)
+        .transition();
 
 
         var div = d3.select("body").append("div")
