@@ -150,7 +150,6 @@ var plotMatrix = function()  {
   var draw = function(cur, duration){
 
       //remove svg
-      // TODO performance - remove, don't append each time
       //$("#matrix").html("");
       
       //console.log(cur + '-'+duration);
