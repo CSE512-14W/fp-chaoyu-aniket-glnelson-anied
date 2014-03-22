@@ -28,17 +28,16 @@ function add_tooltips() {
 	parent = d3.select("circle");
 	console.log(parent);
 	d3.select("#graph").append("img")
-		.data(["Click on a node and drag to move it's location."])
-	    .style("left", parent[0][0].offsetParent.offsetLeft + 5 + "px")
-	    .style("top", parent[0][0].offsetParent.offsetTop - 40 + "px")
+		.data(["Functional connectivity will be shown emerging from selected nodes. Brush over nodes to select them."])
+	    .style("left", 10 + "px")
+	    .style("top", 20 + "px")
 	    .call(add_infotip);
 
 	parent = d3.select("circle");
-	console.log(parent);
 	d3.select("#graph").append("img")
-		.data(["Brush over nodes to select them."])
-	    .style("left", parent[0][0].offsetParent.offsetLeft + 25 + "px")
-	    .style("top", parent[0][0].offsetParent.offsetTop - 55 + "px")
+		.data(["Click on a node and drag to move it's location."])
+	    .style("left", 30 + "px")
+	    .style("top", 20 + "px")
 	    .call(add_infotip);
 
 	parent = d3.select("#controller").select('svg');
