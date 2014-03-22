@@ -250,17 +250,17 @@ var plotMatrix = function()  {
       .data(intensity)
       //.enter().append("svg:g")
       
-      .attr("class", "row");
+      //.attr("class", "row");
 
       var col = row.selectAll(".cell")
       .data(function (d, i) { return d.map(function(a) { return {value: a, row: i}; } ) })
       //.enter().append("svg:rect")
       .attr("class", "cell")
-      .attr("x", function(d, i) { return x(i) * w; })
-      .attr("y", function(d, i) { return y(d.row) * h; })
-      .attr("width", x(1) * w)
-      .attr("height", y(1) * h)
-      .attr("transform", function(d, i) { return "translate(" + 60 + ", " + 50 + ")"; })
+      //.attr("x", function(d, i) { return x(i) * w; })
+      //.attr("y", function(d, i) { return y(d.row) * h; })
+     // .attr("width", x(1) * w)
+     // .attr("height", y(1) * h)
+    //  .attr("transform", function(d, i) { return "translate(" + 60 + ", " + 50 + ")"; })
       .style("fill", function(d) { 
         if(isNaN(d.value)){
           return '#f1f1f1';
